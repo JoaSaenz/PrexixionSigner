@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asignar Buckets a Usuario</title>
+</head>
+
+<body>
+  <h1>Asignar Buckets a: <span th:text="${user.username}"></span></h1>
+
+  <form action="#" th:action="@{/admin/assign-bucket/{userId}(userId=${user.id})}" method="post">
+    <label for="bucket">Seleccionar Bucket:</label>
+    <select name="bucketId" id="bucket">
+      <!-- Aquí se cargan los buckets disponibles -->
+      <option th:each="bucket : ${availableBuckets}" th:value="${bucket.id}" th:text="${bucket.name}"></option>
+    </select>
+    <button type="submit">Asignar Bucket</button>
+  </form>
+
+  <br />
+
+  <h2>Buckets Asignados:</h2>
+  <ul>
+    <!-- Aquí se muestran los buckets que ya están asignados al usuario -->
+    <li th:each="bucket : ${user.buckets}" th:text="${bucket.name}">
+      <form th:action="@{/admin/remove-bucket/{userId}/{bucketId}(userId=${user.id}, bucketId=${bucket.id})}"
+        method="post" style="display: inline">
+        <button type="submit">Quitar Bucket</button>
+      </form>
+    </li>
+  </ul>
+
+  <br />
+  <a href="/admin/users">Volver a la lista de usuarios</a>
+</body>
+
+</html>

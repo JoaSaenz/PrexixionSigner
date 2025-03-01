@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrar Usuarios</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<body>
+  <h1>Administrar Usuarios</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre de Usuario</th>
+        <th>Buckets Asignados</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Iterar sobre la lista de usuarios -->
+      <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td>
+          <ul>
+            <!-- Listar los buckets asignados -->
+            <li th:each="bucket : ${user.buckets}">
+              <span th:text="${bucket.name}"></span>
+              <form th:action="@{/admin/users/remove-bucket}" method="post" style="display: inline">
+                <input type="hidden" name="userId" th:value="${user.id}" />
+                <input type="hidden" name="bucketId" th:value="${bucket.id}" />
+                <button type="submit">Quitar</button>
+              </form>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <a th:href="@{/admin/users/assignBucket(userId=${user.id})}">Asignar Bucket</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <a href="/admin">Volver</a>
+</body>
+
+</html>

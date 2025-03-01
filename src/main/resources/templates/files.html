@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Archivos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Subir Archivos a MinIO</h2>
+
+    <!-- Mensajes de éxito o error -->
+    <p th:if="${success}" class="success" th:text="${success}"></p>
+    <p th:if="${error}" class="error" th:text="${error}"></p>
+
+    <!-- Formulario para subir archivos -->
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <label for="bucket">Selecciona un bucket:</label>
+      <select name="bucket" id="bucket">
+        <option value="">Seleccione...</option>
+        <th:block th:each="bucket : ${buckets}">
+          <option th:value="${bucket.name}" th:text="${bucket.name}"></option>
+        </th:block>
+      </select>
+
+      <br><br>
+
+      <input type="file" name="file" required />
+      <button type="submit">Subir Archivo</button>
+    </form>
+
+    <h3>Lista de Archivos</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Archivo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="file : ${files}">
+          <td th:text="${file}"></td>
+          <td>
+            <!-- Botón de descarga -->
+            <a th:href="@{/download/{bucket}/{file}(bucket=${selectedBucket}, file=${file})}" class="btn btn-download">
+              Descargar
+            </a>
+
+            <!-- Botón de eliminación -->
+            <form th:action="@{/delete/{bucket}/{file}(bucket=${selectedBucket}, file=${file})}" method="post"
+              style="display:inline;">
+              <button type="submit" class="btn btn-delete"
+                onclick="return confirm('¿Seguro que quieres eliminar este archivo?');">
+                Eliminar
+              </button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>

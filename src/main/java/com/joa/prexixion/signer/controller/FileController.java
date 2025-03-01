@@ -6,9 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.joa.prexixion.signer.model.File;
 import com.joa.prexixion.signer.model.User;
 import com.joa.prexixion.signer.service.MinioService;
 import com.joa.prexixion.signer.service.UserService;
@@ -42,13 +44,20 @@ public class FileController {
             List<com.joa.prexixion.signer.model.Bucket> buckets = user.getBuckets().stream().toList();
 
             // Obtener archivos filtrados
-            List<String> userFiles = new ArrayList<>();
+            List<File> userFiles = new ArrayList<>();
             for (com.joa.prexixion.signer.model.Bucket bucket : buckets) {
                 List<String> files = minioService.listFiles(bucket.getName());
                 List<String> filteredFiles = files.stream()
                         .filter(file -> file.startsWith(username + "_")) // Filtrar por prefijo
                         .toList();
-                userFiles.addAll(filteredFiles);
+                for (String filteredFileName : filteredFiles) {
+                    userFiles.add(new File(filteredFileName, bucket.getName()));
+                }
+                // userFiles.addAll(filteredFiles);
+            }
+
+            for (File file : userFiles) {
+                System.out.println(file.toString());
             }
 
             model.addAttribute("files", userFiles);
@@ -72,9 +81,27 @@ public class FileController {
         return "redirect:/files"; // Redirige a la lista de archivos
     }
 
-    @DeleteMapping("/delete/{fileName}")
-    public ResponseEntity<String> deleteFile(@PathVariable String fileName) throws IOException {
-        minioService.deleteFile(fileName);
-        return ResponseEntity.ok("File deleted successfully");
+    @GetMapping("/download/{bucketName}/{fileName}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String bucketName, @PathVariable String fileName) {
+        try {
+            byte[] fileData = minioService.downloadFile(bucketName, fileName);
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
+                    .body(fileData);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/delete/{bucketName}/{fileName}")
+    public String deleteFile(@PathVariable String bucketName, @PathVariable String fileName,
+            RedirectAttributes redirectAttributes) {
+        try {
+            minioService.deleteFile(bucketName, fileName);
+            redirectAttributes.addFlashAttribute("success", "Archivo eliminado correctamente.");
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el archivo.");
+        }
+        return "redirect:/files";
     }
 }

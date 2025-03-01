@@ -59,15 +59,16 @@
       </thead>
       <tbody>
         <tr th:each="file : ${files}">
-          <td th:text="${file}"></td>
+          <td th:text="${file.nombre}"></td>
           <td>
             <!-- Botón de descarga -->
-            <a th:href="@{/download/{bucket}/{file}(bucket=${selectedBucket}, file=${file})}" class="btn btn-download">
+            <a th:href="@{/download/{bucket}/{file} (bucket=${file.bucket}, file=${file.nombre})}"
+              class="btn btn-download">
               Descargar
             </a>
 
             <!-- Botón de eliminación -->
-            <form th:action="@{/delete/{bucket}/{file}(bucket=${selectedBucket}, file=${file})}" method="post"
+            <form th:action="@{/delete/{bucket}/{file} (bucket=${file.bucket}, file=${file.nombre})}" method="post"
               style="display:inline;">
               <button type="submit" class="btn btn-delete"
                 onclick="return confirm('¿Seguro que quieres eliminar este archivo?');">

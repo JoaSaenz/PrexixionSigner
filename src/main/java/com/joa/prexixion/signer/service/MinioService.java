@@ -53,20 +53,20 @@ public class MinioService {
         return fileName;
     }
 
-    public void deleteFile(String fileName) throws IOException {
-        try {
-            // Verificar si el archivo existe antes de eliminarlo
-            if (doesFileExist(fileName)) {
-                minioClient.removeObject(
-                        RemoveObjectArgs.builder()
-                                .bucket(BUCKET_NAME)
-                                .object(fileName)
-                                .build());
-            } else {
-                throw new RuntimeException("File does not exist: " + fileName);
-            }
+    public byte[] downloadFile(String bucketName, String fileName) throws IOException {
+        try (InputStream stream = minioClient.getObject(
+                GetObjectArgs.builder().bucket(bucketName).object(fileName).build())) {
+            return stream.readAllBytes();
         } catch (MinioException | InvalidKeyException | NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error deleting file from MinIO", e);
+            throw new IOException("Error al descargar el archivo.", e);
+        }
+    }
+
+    public void deleteFile(String bucketName, String fileName) throws IOException {
+        try {
+            minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(fileName).build());
+        } catch (MinioException | InvalidKeyException | NoSuchAlgorithmException e) {
+            throw new IOException("Error al eliminar el archivo.", e);
         }
     }
 

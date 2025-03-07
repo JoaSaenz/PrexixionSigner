@@ -19,7 +19,7 @@ public class AuthController {
     public String login() {
         return "login"; // Asegúrate de tener una vista llamada login.html
     }
-
+    
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());

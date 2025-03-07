@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Incluir estilos desde el fragmento -->
+    <th:block th:replace="fragments/fragments :: styles"></th:block>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            transition: background 0.3s, color 0.3s;
+            flex-direction: column;
+        }
+
+        .dashboard {
+            display: flex;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #222;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            transition: transform 0.3s;
+        }
+
+        .sidebar.hide {
+            transform: translateX(-100%);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: #f4f4f4;
+            transition: background 0.3s;
+            display: flex;
+            flex-direction: column;
+            margin-left: 250px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info .icon {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .charts {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chart {
+            flex: 1;
+            min-width: 250px;
+            height: 200px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .toggle-menu {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        body.dark-mode {
+            background: #121212;
+            color: white;
+        }
+
+        body.dark-mode .content {
+            background: #1e1e1e;
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .chart {
+            background: #333;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: absolute;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <aside class="sidebar" id="sidebar">
+            <h2>Dashbrd</h2>
+            <nav>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Reportes</a></li>
+                    <li><a href="#">Usuarios</a></li>
+                    <li><a href="#">Configuración</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="content">
+            <header class="header">
+                <span class="toggle-menu" onclick="toggleSidebar()">☰</span>
+                <h1>Bienvenido</h1>
+                <div class="user-info">
+                    <span class="icon">🔔</span>
+                    <span class="icon">👤</span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </header>
+            <section class="stats">
+                <div class="card">Ganancias: $1,250</div>
+                <div class="card">Horas trabajadas: 35.5 hrs</div>
+                <div class="card">Crecimiento: 14.5%</div>
+                <div class="card">Nuevos usuarios: 200</div>
+            </section>
+            <section class="charts">
+                <div class="chart">Gráfico 1</div>
+                <div class="chart">Gráfico 2</div>
+            </section>
+        </main>
+    </div>
+    <!-- Incluir scripts desde el fragmento -->
+    <th:block th:replace="fragments/fragments :: scripts"></th:block>
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('hide');
+        }
+        function setThemeMode(mode) {
+            document.body.classList.toggle('dark-mode', mode === 'dark');
+        }
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme') || 'auto';
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setThemeMode(savedTheme === 'auto' ? (prefersDark ? 'dark' : 'light') : savedTheme);
+        }
+        document.getElementById('theme-toggle').addEventListener('change', function () {
+            const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+            setThemeMode(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+        loadThemePreference();
+    </script>
+</body>
+
+</html>

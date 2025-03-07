@@ -34,18 +34,6 @@ public class AdminController {
     public String listUsers(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
-
-        for (User user : users) {
-            System.out.println("Usuario");
-            System.out.println(user.toString());
-
-            System.out.println("Buckets del usuario " + user.getId());
-            for (Bucket b : user.getBuckets()) {
-                System.out.println(b.toString());
-            }
-            System.out.println("-----------------------");
-        }
-
         return "admin/users"; // users.html
     }
 

@@ -19,7 +19,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/css/**").permitAll() // Permitir acceso sin
+                        .requestMatchers("/register", "/login", "/css/**", "/js/**", "/img/**", "/assets/**", "/favicon.ico").permitAll() // Permitir acceso sin
                                                                                        // autenticación
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Solo ROLE_ADMIN puede acceder a /admin/**
                         .requestMatchers("/files", "/upload").hasAnyRole("USER", "ADMIN") // Usuarios normales y admin

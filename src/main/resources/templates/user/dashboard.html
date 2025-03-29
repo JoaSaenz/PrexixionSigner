@@ -1,133 +1,16 @@
-<!-- <th:block th:replace="fragments/fragments :: styles"></th:block>
-<th:block th:replace="fragments/fragments :: scripts"></th:block> -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Dashboard - SB Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <!-- <link href="/css/styles.css" rel="stylesheet" /> -->
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <th:block th:replace="fragments/fragments :: dashboardHead"></th:block>
 </head>
 
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Start Bootstrap</a>
-        <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
-                    aria-describedby="btnNavbarSearch" />
-                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i
-                        class="fas fa-search"></i></button>
-            </div>
-        </form>
-        <!-- Navbar-->
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Settings</a></li>
-                    <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                    <li>
-                        <hr class="dropdown-divider" />
-                    </li>
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <th:block th:replace="fragments/fragments :: navbar"></th:block>
+
     <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="index.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-                        <div class="sb-sidenav-menu-heading">Interface</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Layouts
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-static.html">Static Navigation</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
-                            aria-expanded="false" aria-controls="collapsePages">
-                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Pages
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                                    data-bs-target="#pagesCollapseAuth" aria-expanded="false"
-                                    aria-controls="pagesCollapseAuth">
-                                    Authentication
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
-                                    data-bs-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="login.html">Login</a>
-                                        <a class="nav-link" href="register.html">Register</a>
-                                        <a class="nav-link" href="password.html">Forgot Password</a>
-                                    </nav>
-                                </div>
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                                    data-bs-target="#pagesCollapseError" aria-expanded="false"
-                                    aria-controls="pagesCollapseError">
-                                    Error
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
-                                    data-bs-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="401.html">401 Page</a>
-                                        <a class="nav-link" href="404.html">404 Page</a>
-                                        <a class="nav-link" href="500.html">500 Page</a>
-                                    </nav>
-                                </div>
-                            </nav>
-                        </div>
-                        <div class="sb-sidenav-menu-heading">Addons</div>
-                        <a class="nav-link" href="charts.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Charts
-                        </a>
-                        <a class="nav-link" href="tables.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Tables
-                        </a>
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Start Bootstrap
-                </div>
-            </nav>
-        </div>
+        <th:block th:replace="fragments/fragments :: sidenav"></th:block>
+
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
@@ -191,6 +74,136 @@
                                 </div>
                                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div id="calendarioGeneralElement" class="mb-4"></div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6">
+                                    <div class="card bg-primary text-white mb-4">
+                                        <div class="card-body">Primary Card</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="#">View Details</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-md-6">
+                                    <div class="card bg-warning text-white mb-4">
+                                        <div class="card-body">Warning Card</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="#">View Details</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6">
+                                    <div class="card bg-success text-white mb-4">
+                                        <div class="card-body">Success Card</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="#">View Details</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-md-6">
+                                    <div class="card bg-danger text-white mb-4">
+                                        <div class="card-body">Danger Card</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="#">View Details</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Chart Example New 1
+                                </div>
+                                <div class="card-body ">
+                                    <div id="myChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Chart Example New 2
+                                </div>
+                                <div class="card-body ">
+                                    <div id="myChart2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-3">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Chart Example New 3
+                                </div>
+                                <div class="card-body">
+                                    <div id="myChart3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Chart Example New 4
+                                </div>
+                                <div class="card-body">
+                                    <div id="myChart4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Chart Excample New 5
+                                </div>
+                                <div class="card-body">
+                                    <div id="myChart5"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-1"></i>
+                            Enlaces Externos
+                        </div>
+                        <div class="card-body enlacesExternos">
+                            <ul>
+                                <li><a href="https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias"
+                                        target="_blank">Consulta RUC</a></li>
+                                <li><a href="https://www2.sunarp.gob.pe/consulta-vehicular/inicio"
+                                        target="_blank">Consulta
+                                        vehicular SUNARP</a></li>
+                                <li><a href="https://pvo.osinergmin.gob.pe/msfh5/busquedaRegistroHidrocarburos/init.action"
+                                        target="_blank">Consulta OSINERGMIN</a></li>
+                                <li><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_consultadgtt/Frm_rep_intra_mercancia.aspx"
+                                        target="_blank">MTC consulta transportista</a></li>
+                                <li><a href="https://pvo.osinergmin.gob.pe/seguridad/login?error=UP"
+                                        target="_blank">Consulta
+                                        SCOP</a></li>
+                                <li><a href="https://apps.trabajo.gob.pe/consultas-remype/app/index.html"
+                                        target="_blank">Consulta REMYPE</a></li>
+                                <li><a href="http://www.aduanet.gob.pe/cl-ad-itconsultadwh/ieITS01Alias?accion=consultar&CG_consulta=1"
+                                        target="_blank">Consulta importador/exportador</a></li>
+                                <li><a href="https://im01-autorizacion-sprl-production.apps.paas.sunarp.gob.pe/v1/sunarp-services/im/autorizacion/login"
+                                        target="_blank">SUNARP trámites</a></li>
+                                <li><a href="https://gerenciasac.com" target="_blank">Gerencia SAC</a></li>
+                            </ul>
                         </div>
                     </div>
                     <div class="card mb-4">
@@ -697,15 +710,175 @@
             </footer>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-    <script th:src="@{/js/scripts.js}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="/assets/demo/chart-area-demo.js"></script>
-    <script src="/assets/demo/chart-bar-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-        crossorigin="anonymous"></script>
-    <script th:src="@{/js/datatables-simple-demo.js}"></script>
+
+    <th:block th:replace="fragments/fragments :: dashboardScripts"></th:block>
+
+    <script>
+        var calendarioGeneralElement = document.getElementById('calendarioGeneralElement');
+        var calendarioGeneral = new FullCalendar.Calendar(calendarioGeneralElement, {
+            locale: 'es',
+        });
+        calendarioGeneral.render();
+
+        var options1 = {
+            chart: { type: 'bar', height: 270 },
+            series: [
+                { name: 'Ventas', data: [1200, 1500, 1700, 2000, 1800] },
+                { name: 'Ventas IGV', data: [216, 270, 306, 360, 324] },
+                { name: 'Compras', data: [900, 1300, 1600, 1900, 1750] },
+                { name: 'Compras IGV', data: [162, 234, 288, 342, 315] }
+            ],
+            dataLabels: {
+                enabled: false
+            },
+            title: {
+                text: 'Históricos en Soles (Ventas - Compras - IGV 2025)'
+            },
+            xaxis: {
+                categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo']
+            },
+            colors: ['#1E88E5', '#64B5F6', '#43A047', '#A5D6A7']
+        };
+
+        var options2 = {
+            chart: { type: 'area', height: 270, width: '100%', toolbar: { show: true } },
+            series: [
+                {
+                    name: "Ventas", data: [5483047, 1544751, 2054886, 3276415, 1298334, 191565,
+                        3655260, 747874, 1617574, 1184770, 1672241, 1648873]
+                },
+                {
+                    name: "Compras", data: [3884157, 3009114, 651973, 4760532, 1182382, 1012646,
+                        665134, 1166967, 1731567, 487520, 1568708, 1823021]
+                }
+            ],
+            xaxis: { categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiemnbre', 'Octubre', 'Noviembre', 'Diciembre'] },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth' }, // Línea suave
+            colors: ['#1E88E5', '#43A047'],
+            fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.1 } },
+            markers: { size: 5 },
+            title: { text: 'Ventas VS Compras' },
+
+        };
+
+        var options3 = {
+            chart: { type: 'donut', height: 270 },
+            series: [1612660, 1199856],
+            labels: ['Ventas', 'Compras'],
+            colors: ['#1E88E5', '#43A047'],
+            title: { text: 'Salud Tributaria' },
+        };
+
+        var options4 = {
+            chart: { type: 'bar', height: 270, width: '100%' },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    borderRadius: 0,
+                    borderWidth: 0,
+                    colors: {
+                        ranges: [
+                            { from: -Infinity, to: 0, color: '#E53935' }, // Rojo para valores negativos
+                            { from: 0.01, to: Infinity, color: '#43A047' } // Verde para valores positivos
+                        ]
+                    }
+                }
+            },
+            series: [{ name: 'IGV', data: [288016, -262980, 253375, -265981, 22160, -147118, 538461, -74722, -20320, 125863, 21028, -30811] }],
+            dataLabels: { enabled: false },
+            title: { text: 'Comportamiento IGV 2025' },
+            xaxis: { categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiemnbre', 'Octubre', 'Noviembre', 'Diciembre'] }
+        };
+
+        var options5 = {
+            chart: {
+                type: 'line', height: 270, toolbar: {
+                    show: false
+                }, zoom: {
+                    enabled: false
+                }
+            },
+
+            series: [
+                {
+                    name: 'Ventas', type: 'bar', data: [5483047, 1544751, 2054886, 3276415, 1298334, 191565,
+                        3655260, 747874, 1617574, 1184770, 1672241, 1648873]
+                },
+                {
+                    name: 'Compras', type: 'bar', data: [3884157, 3009114, 651973, 4760532, 1182382, 1012646,
+                        665134, 1166967, 1731567, 487520, 1568708, 1823021]
+                },
+                { name: 'IGV', type: 'line', data: [5, -17, 12, -8, 2, -77, 15, -10, -1, 11, 1, -2] }
+            ],
+            stroke: {
+                width: [0, 0, 4]
+            },
+            title: {
+                text: 'Comportamiento (Ventas - Compras - IGV 2025)'
+            },
+            xaxis: { categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiemnbre', 'Octubre', 'Noviembre', 'Diciembre'] },
+            yaxis: [
+                {
+                    seriesName: '',
+                    axisBorder: {
+                        show: true,
+                        color: '#1E88E5'
+                    },
+                    labels: {
+                        formatter: val => val.toLocaleString(), // Formateo con separadores de miles
+                        style: { colors: "#1E88E5" }
+                    }
+                },
+                {
+                    //     seriesName: 'Compras',
+                    //     axisBorder: {
+                    //         show: true,
+                    //         color: '#43A047'
+                    //     },
+                    //     labels: {
+                    //         formatter: val => val.toLocaleString(), // Formateo con separadores de miles
+                    //         style: { colors: "#43A047" }
+                    //     }
+
+                    seriesName: '',
+                    show: false
+
+                },
+                {
+                    seriesName: 'IGV',
+                    opposite: true,
+                    axisBorder: {
+                        show: true,
+                        color: '#FFC107'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#FFC107',
+                        },
+                        formatter: val => val + "%",
+                    },
+                    // forceNiceScale: true
+                    // min: -50,  // Ajusta estos valores según tus datos
+                    // max: 50
+                }
+            ],
+            tooltip: {
+                y: {
+                    formatter: function (value, { seriesIndex }) {
+                        return seriesIndex === 2 ? value + "%" : value.toLocaleString();
+                    }
+                }
+            },
+            colors: ['#1E88E5', '#43A047', '#FFC107']
+        };
+
+        new ApexCharts(document.querySelector("#myChart"), options1).render();
+        new ApexCharts(document.querySelector("#myChart2"), options2).render();
+        new ApexCharts(document.querySelector("#myChart3"), options3).render();
+        new ApexCharts(document.querySelector("#myChart4"), options4).render();
+        new ApexCharts(document.querySelector("#myChart5"), options5).render();
+    </script>
 </body>
 
 </html>

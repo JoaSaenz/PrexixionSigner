@@ -1,0 +1,144 @@
+/* Mobile First */
+body {
+    background: linear-gradient(135deg, #060e57, #9789df);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.login-container {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4);
+    width: 90%;
+    /* Optimizado para móviles */
+    max-width: 350px;
+}
+
+.form-control {
+    border-radius: 8px;
+    font-size: 16px;
+    padding: 12px;
+}
+
+.btn-primary {
+    background-color: #060e57;
+    border-radius: 8px;
+    transition: 0.3s ease-in-out;
+    border: none;
+    font-size: 18px;
+    padding: 12px;
+}
+
+.btn-primary:hover {
+    background-color: #042a90;
+}
+
+.input-group-text {
+    background: #e9ecef;
+    border-radius: 8px;
+    border-right: 0;
+    color: #060e57;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #060e57;
+    font-size: 16px;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #060e57;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* TABLETS (Pantallas medianas: > 576px) */
+@media (min-width: 576px) {
+    .login-container {
+        max-width: 400px;
+        padding: 30px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .form-label,
+    .input-group-text,
+    .btn {
+        font-size: 18px;
+    }
+
+    .form-control {
+        font-size: 18px;
+        padding: 14px;
+    }
+
+    .btn {
+        padding: 14px;
+    }
+}
+
+/* LAPTOPS y PANTALLAS GRANDES (> 768px) */
+@media (min-width: 768px) {
+    .login-container {
+        max-width: 450px;
+        padding: 35px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+
+    .form-label,
+    .input-group-text,
+    .btn {
+        font-size: 20px;
+    }
+
+    .form-control {
+        font-size: 20px;
+        padding: 16px;
+    }
+
+    .btn {
+        padding: 16px;
+    }
+}
+
+/* PANTALLAS GRANDES (> 1024px) */
+@media (min-width: 1024px) {
+    .login-container {
+        max-width: 400px;
+        /* Reducido para que no se vea tan grande */
+        padding: 30px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+
+    .form-label,
+    .input-group-text,
+    .btn {
+        font-size: 18px;
+    }
+
+    .form-control {
+        font-size: 18px;
+        padding: 14px;
+    }
+
+    .btn {
+        padding: 14px;
+    }
+}

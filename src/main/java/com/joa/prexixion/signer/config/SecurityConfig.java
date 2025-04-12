@@ -19,8 +19,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/css/**", "/js/**", "/img/**", "/assets/**", "/favicon.ico").permitAll() // Permitir acceso sin
-                                                                                       // autenticación
+                        .requestMatchers("/register", "/login", "/css/**", "/js/**", "/img/**", "/assets/**",
+                                "/favicon.ico")
+                        .permitAll() // Permitir acceso sin
+                        // autenticación
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Solo ROLE_ADMIN puede acceder a /admin/**
                         .requestMatchers("/files", "/upload").hasAnyRole("USER", "ADMIN") // Usuarios normales y admin
                                                                                           // pueden acceder
@@ -43,7 +45,7 @@ public class SecurityConfig {
             String redirectUrl = "/";
 
             if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                redirectUrl = "/files";
+                redirectUrl = "/user/dashboard";
             } else if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
                 redirectUrl = "/user/dashboard";
             }

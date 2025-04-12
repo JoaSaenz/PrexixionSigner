@@ -14,12 +14,44 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 11)
     private String username;
     private String password;
     private String roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserBucket> userBuckets;
+
+    // @OneToOne(fetch = FetchType.EAGER)
+    // @JoinColumn(name = "username", referencedColumnName = "ruc", insertable =
+    // false, updatable = false)
+    // private Cliente cliente;
+
+    // Relación opcional con Cliente
+    // @OneToOne(mappedBy = "username", cascade = CascadeType.ALL, fetch =
+    // FetchType.LAZY, optional = true)
+    // private Cliente cliente;
+
+    // En Usuario (User)
+    // @OneToOne(optional = true)
+    // @JoinColumn(name = "username", referencedColumnName = "ruc", insertable =
+    // false, updatable = false)
+
+    @Transient
+    private String frontNombreUsuario;
+
+    @Transient
+    private Cliente cliente;
+
+    // Getter para cliente
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    // Setter para cliente
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
 
     public Long getId() {
         return id;
@@ -56,6 +88,14 @@ public class User {
     // Getters and setters
     public Set<Bucket> getBuckets() {
         return userBuckets.stream().map(UserBucket::getBucket).collect(Collectors.toSet());
+    }
+
+    public String getFrontNombreUsuario() {
+        return frontNombreUsuario;
+    }
+
+    public void setFrontNombreUsuario(String frontNombreUsuario) {
+        this.frontNombreUsuario = frontNombreUsuario;
     }
 
     @Override

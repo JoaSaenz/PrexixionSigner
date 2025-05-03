@@ -127,20 +127,46 @@
                         <div class="col-xl-6">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    Chart Example New 1
+                                    IGV <span id="historicoEnSolesPasadoAnio"></span> - HISTÓRICO EN SOLES
                                 </div>
                                 <div class="card-body ">
-                                    <div id="myChart"></div>
+                                    <canvas id="historicoEnSolesPasadoChart">
+
+                                    </canvas>
+                                    <div class="row text-center mt-1">
+                                        <div class="col-6">
+                                            <i class="fas fa-circle" style="color: rgb(0, 51, 204);"></i><span
+                                                style="color: rgb(121, 125, 127);">&nbsp;Ventas</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <i class="fas fa-circle" style="color: rgb(55, 178, 5);"></i><span
+                                                style="color: rgb(121, 125, 127);">&nbsp;Compras</span>
+                                        </div>
+                                    </div>
+                                    <!-- <div id="myChart"></div> -->
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    Chart Example New 2
+                                    IGV <span id="historicoEnSolesActualAnio"></span> - HISTÓRICO EN SOLES
                                 </div>
                                 <div class="card-body ">
-                                    <div id="myChart2"></div>
+                                    <canvas id="historicoEnSolesActualChart">
+
+                                    </canvas>
+                                    <div class="row text-center mt-1">
+                                        <div class="col-6">
+                                            <i class="fas fa-circle" style="color: rgb(0, 51, 204);"></i><span
+                                                style="color: rgb(121, 125, 127);">&nbsp;Ventas</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <i class="fas fa-circle" style="color: rgb(55, 178, 5);"></i><span
+                                                style="color: rgb(121, 125, 127);">&nbsp;Compras</span>
+                                        </div>
+                                    </div>
+                                    <!-- <div id="myChart2"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -713,7 +739,7 @@
 
     <th:block th:replace="fragments/fragments :: dashboardScripts"></th:block>
 
-    <script>
+    <!-- <script>
         var calendarioGeneralElement = document.getElementById('calendarioGeneralElement');
         var calendarioGeneral = new FullCalendar.Calendar(calendarioGeneralElement, {
             locale: 'es',
@@ -878,7 +904,9 @@
         new ApexCharts(document.querySelector("#myChart3"), options3).render();
         new ApexCharts(document.querySelector("#myChart4"), options4).render();
         new ApexCharts(document.querySelector("#myChart5"), options5).render();
-    </script>
+    </script> -->
+
+    <!-- <script src="/js/dashboard.js"></script> -->
 </body>
 
 </html>

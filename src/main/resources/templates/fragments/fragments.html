@@ -79,10 +79,20 @@
     <!--Calendario-->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales/es.js"></script>
+
+    <!--Functions-->
+    <script th:src="@{/js/functions.js}"></script>
+
     <!--Chart-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="/assets/demo/chart-area-demo.js"></script>
-    <script src="/assets/demo/chart-bar-demo.js"></script>
+    <script src="/assets/demo/chart-bar-demo.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script> -->
+    <script th:src="@{/js/chart.js}"></script>
+
     <!-- Datatable -->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
         crossorigin="anonymous"></script>
@@ -90,6 +100,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Sidebar -->
     <script th:src="@{/js/sidebarScripts.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
 </th:block>
 
 <!-- 📜 Fragmento de scripts -->

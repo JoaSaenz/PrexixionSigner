@@ -26,6 +26,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Solo ROLE_ADMIN puede acceder a /admin/**
                         .requestMatchers("/files", "/upload").hasAnyRole("USER", "ADMIN") // Usuarios normales y admin
                                                                                           // pueden acceder
+                        .requestMatchers("/api/dashboard/**").authenticated()
                         .anyRequest().authenticated()) // Cualquier otra solicitud requiere autenticación
                 .formLogin(login -> login
                         .loginPage("/login")

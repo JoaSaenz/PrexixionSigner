@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.joa.prexixion.signer.model.File;
 import com.joa.prexixion.signer.model.User;
 import com.joa.prexixion.signer.service.MinioService;
 import com.joa.prexixion.signer.service.UserService;
-
-import io.minio.messages.Bucket;
 
 import java.io.IOException;
 import java.util.ArrayList;

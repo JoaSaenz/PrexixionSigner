@@ -17,4 +17,8 @@ public class StatComportamientoService {
     public List<StatComportamiento> getHistoricoEnSoles(String anio, String username) {
         return comportamientoRepository.getHistoricoEnSoles(anio, username);
     }
+
+    public List<StatComportamiento> getHistoricoIGV(String anio, String username) {
+        return comportamientoRepository.getHistoricoIGV(anio, username);
+    }
 }

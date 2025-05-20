@@ -35,4 +35,20 @@ public class DashboardApiController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/getHistoricoIGV")
+    public ResponseEntity<Map<String, Object>> getHistoricoIGV(
+            @RequestParam String anio,
+            Authentication authentication) {
+
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("anio", anio);
+        response.put("usuario", user.getUsername());
+
+        response.put("statsHistoricoIGV", comportamientoService.getHistoricoIGV(anio, user.getUsername()));
+
+        return ResponseEntity.ok(response);
+    }
 }

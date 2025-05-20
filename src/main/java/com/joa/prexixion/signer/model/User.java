@@ -1,6 +1,5 @@
 package com.joa.prexixion.signer.model;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,21 +20,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserBucket> userBuckets;
-
-    // @OneToOne(fetch = FetchType.EAGER)
-    // @JoinColumn(name = "username", referencedColumnName = "ruc", insertable =
-    // false, updatable = false)
-    // private Cliente cliente;
-
-    // Relación opcional con Cliente
-    // @OneToOne(mappedBy = "username", cascade = CascadeType.ALL, fetch =
-    // FetchType.LAZY, optional = true)
-    // private Cliente cliente;
-
-    // En Usuario (User)
-    // @OneToOne(optional = true)
-    // @JoinColumn(name = "username", referencedColumnName = "ruc", insertable =
-    // false, updatable = false)
 
     @Transient
     private String frontNombreUsuario;

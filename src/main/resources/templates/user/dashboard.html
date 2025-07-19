@@ -111,32 +111,52 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Histórico IGV <span id="historicoIGVActualAnio"
+                                            class="text-muted fw-normal"></span>
+                                    </h5>
+                                </div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-striped" id="historicoIGVActualTabla">
+                                        <thead class="table-light">
+                                            <tr class="text-center">
+                                                <th class="table-dashboard-header">PRD</th>
+                                                <th class="table-dashboard-header">VENTAS</th>
+                                                <th class="table-dashboard-header">COMPRAS</th>
+                                                <th class="table-dashboard-header">IGV</th>
+                                                <th class="table-dashboard-header">%</th>
+                                                <th class="table-dashboard-header">PER</th>
+                                                <th class="table-dashboard-header">RET</th>
+                                                <th class="table-dashboard-header">SALDO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot></tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-
-
-
-
-                        <div class="row">
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-area me-1"></i>
-                                        Comportamiento IGV <span id="comportamientoIGVPasadoAnio"></span>
-                                    </div>
-                                    <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="chart-container">
                                         <canvas id="comportamientoIGVPasadoChart">
 
                                         </canvas>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-area me-1"></i>
-                                        Comportamiento IGV <span id="comportamientoIGVActualAnio"></span>
-                                    </div>
-                                    <div class="card-body">
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="chart-container">
                                         <canvas id="comportamientoIGVActualChart">
 
                                         </canvas>
@@ -144,41 +164,70 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="ventasVsComprasPasadoChart">
 
-                        <div class="row">
-                            <div class="col-xl-3">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        Chart Example New 3
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="myChart3"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        Chart Example New 4
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="myChart4"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        Chart Excample New 5
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="myChart5"></div>
+                                        </canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="ventasVsComprasActualChart">
 
+                                        </canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="row">
+                        <div class="col-xl-3">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Chart Example New 3
+                                </div>
+                                <div class="card-body">
+                                    <div id="myChart3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Chart Example New 4
+                                </div>
+                                <div class="card-body">
+                                    <div id="myChart4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Chart Excample New 5
+                                </div>
+                                <div class="card-body">
+                                    <div id="myChart5"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
@@ -208,7 +257,6 @@
                                 </ul>
                             </div>
                         </div>
-
                     </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

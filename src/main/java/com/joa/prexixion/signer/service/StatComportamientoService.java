@@ -21,4 +21,12 @@ public class StatComportamientoService {
     public List<StatComportamiento> getHistoricoIGV(String anio, String username) {
         return comportamientoRepository.getHistoricoIGV(anio, username);
     }
+
+    public List<StatComportamiento> getComportamientoIGV(String anio, String username) {
+        return comportamientoRepository.getHistoricoIGV(anio, username);
+    }
+
+    public List<StatComportamiento> getVentasVsCompras(String anio, String username) {
+        return comportamientoRepository.getHistoricoIGV(anio, username);
+    }
 }

@@ -51,4 +51,36 @@ public class DashboardApiController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/getComportamientoIGV")
+    public ResponseEntity<Map<String, Object>> getComportamientoIGV(
+            @RequestParam String anio,
+            Authentication authentication) {
+
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("anio", anio);
+        response.put("usuario", user.getUsername());
+
+        response.put("statsComportamientoIGV", comportamientoService.getComportamientoIGV(anio, user.getUsername()));
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getVentasVsCompras")
+    public ResponseEntity<Map<String, Object>> getVentasVsCompras(
+            @RequestParam String anio,
+            Authentication authentication) {
+
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("anio", anio);
+        response.put("usuario", user.getUsername());
+
+        response.put("statsVentasVsCompras", comportamientoService.getVentasVsCompras(anio, user.getUsername()));
+
+        return ResponseEntity.ok(response);
+    }
 }

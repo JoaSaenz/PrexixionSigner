@@ -162,8 +162,8 @@ public class StatComportamientoRepository {
         List<StatComportamiento> statsResultSet = new ArrayList<>();
         List<StatComportamiento> statsPeriodos = new ArrayList<>();
 
-        String fechaParametro = anio + "-12-01";
-        String fechaFinal = DateUtils.restarMeses(fechaParametro, 12);
+        String fechaFinal = anio + "-12-01";
+        //String fechaFinal = DateUtils.restarMeses(fechaParametro, 12);
         String fechaInicial = DateUtils.restarMeses(fechaFinal, 11);
         List<String> periodosList = DateUtils.getFechasBetweenStrings(fechaInicial, fechaFinal);
 

@@ -23,7 +23,7 @@ public class StatComportamientoService {
     }
 
     public List<StatComportamiento> getComportamientoIGV(String anio, String username) {
-        return comportamientoRepository.getHistoricoIGV(anio, username);
+        return comportamientoRepository.getComportamientoIGV(anio, username);
     }
 
     public List<StatComportamiento> getVentasVsCompras(String anio, String username) {

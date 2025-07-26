@@ -18,40 +18,53 @@
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
+
+
                     <div class="row">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-primary text-white mb-4">
-                                <div class="card-body">Primary Card</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <!-- <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Calendar
+                                    </h5>
+                                </div> -->
+                                <div class="card-body ">
+                                    <div class="calendar-container">
+                                        <div id="calendarObligaciones" class="calendar col-12 obligaciones-calendar">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-warning text-white mb-4">
-                                <div class="card-body">Warning Card</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        <div class="col-xl-2">
+                            <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Enlaces de interés
+                                    </h5>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-success text-white mb-4">
-                                <div class="card-body">Success Card</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-danger text-white mb-4">
-                                <div class="card-body">Danger Card</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                <div class="card-body enlacesExternos">
+                                    <ul>
+                                        <li><a href="https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias"
+                                                target="_blank">Consulta RUC</a></li>
+                                        <li><a href="https://www2.sunarp.gob.pe/consulta-vehicular/inicio"
+                                                target="_blank">Consulta
+                                                vehicular SUNARP</a></li>
+                                        <li><a href="https://pvo.osinergmin.gob.pe/msfh5/busquedaRegistroHidrocarburos/init.action"
+                                                target="_blank">Consulta OSINERGMIN</a></li>
+                                        <li><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_consultadgtt/Frm_rep_intra_mercancia.aspx"
+                                                target="_blank">MTC consulta transportista</a></li>
+                                        <li><a href="https://pvo.osinergmin.gob.pe/seguridad/login?error=UP"
+                                                target="_blank">Consulta
+                                                SCOP</a></li>
+                                        <li><a href="https://apps.trabajo.gob.pe/consultas-remype/app/index.html"
+                                                target="_blank">Consulta REMYPE</a></li>
+                                        <li><a href="http://www.aduanet.gob.pe/cl-ad-itconsultadwh/ieITS01Alias?accion=consultar&CG_consulta=1"
+                                                target="_blank">Consulta importador/exportador</a></li>
+                                        <li><a href="https://im01-autorizacion-sprl-production.apps.paas.sunarp.gob.pe/v1/sunarp-services/im/autorizacion/login"
+                                                target="_blank">SUNARP trámites</a></li>
+                                        <li><a href="https://gerenciasac.com" target="_blank">Gerencia SAC</a></li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -60,6 +73,12 @@
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Histórico en soles <span id="historicoEnSolesPasadoAnio"
+                                            class="text-muted fw-normal"></span>
+                                    </h5>
+                                </div>
                                 <div class="card-body ">
                                     <div class="chart-container">
                                         <canvas id="historicoEnSolesPasadoChart">
@@ -71,6 +90,12 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Histórico en soles <span id="historicoEnSolesActualAnio"
+                                            class="text-muted fw-normal"></span>
+                                    </h5>
+                                </div>
                                 <div class="card-body ">
                                     <div class="chart-container">
                                         <canvas id="historicoEnSolesActualChart">
@@ -92,7 +117,7 @@
                                     </h5>
                                 </div>
                                 <div class="card-body table-responsive">
-                                    <table class="table table-striped" id="historicoIGVPasadoTabla">
+                                    <table class="table table-striped nowrap" id="historicoIGVPasadoTabla">
                                         <thead class="table-light">
                                             <tr class="text-center">
                                                 <th class="table-dashboard-header">PRD</th>
@@ -142,10 +167,16 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-xl-6">
+                        <div class="col-xl-3 col-md-6">
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <div class="chart-container">
+                                    <div class="p-4 text-center">
+                                        <h5 class="fw-bold text-dark mb-0">
+                                            Comportamiento IGV <span id="comportamientoIGVPasadoAnio"
+                                                class="text-muted fw-normal"></span>
+                                        </h5>
+                                    </div>
+                                    <div class="chart-container-small">
                                         <canvas id="comportamientoIGVPasadoChart">
 
                                         </canvas>
@@ -153,10 +184,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-xl-3 col-md-6">
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <div class="chart-container">
+                                    <div class="p-4 text-center">
+                                        <h5 class="fw-bold text-dark mb-0">
+                                            Comportamiento IGV <span id="comportamientoIGVActualAnio"
+                                                class="text-muted fw-normal"></span>
+                                        </h5>
+                                    </div>
+                                    <div class="chart-container-small">
                                         <canvas id="comportamientoIGVActualChart">
 
                                         </canvas>
@@ -164,13 +201,16 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xl-6">
+                        <div class="col-xl-3 col-md-6">
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <div class="chart-container">
+                                    <div class="p-4 text-center">
+                                        <h5 class="fw-bold text-dark mb-0">
+                                            Ventas vs Compras <span id="ventasVsComprasPasadoAnio"
+                                                class="text-muted fw-normal"></span>
+                                        </h5>
+                                    </div>
+                                    <div class="chart-container-small">
                                         <canvas id="ventasVsComprasPasadoChart">
 
                                         </canvas>
@@ -178,10 +218,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-xl-3 col-md-6">
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <div class="chart-container">
+                                    <div class="p-4 text-center">
+                                        <h5 class="fw-bold text-dark mb-0">
+                                            Ventas vs Compras <span id="ventasVsComprasActualAnio"
+                                                class="text-muted fw-normal"></span>
+                                        </h5>
+                                    </div>
+                                    <div class="chart-container-small">
                                         <canvas id="ventasVsComprasActualChart">
 
                                         </canvas>
@@ -191,6 +237,45 @@
                         </div>
                     </div>
 
+
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-primary text-white mb-4">
+                                <div class="card-body">Primary Card</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="#">View Details</a>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-warning text-white mb-4">
+                                <div class="card-body">Warning Card</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="#">View Details</a>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-success text-white mb-4">
+                                <div class="card-body">Success Card</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="#">View Details</a>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-danger text-white mb-4">
+                                <div class="card-body">Danger Card</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="#">View Details</a>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
 
@@ -233,31 +318,10 @@
                                 <i class="fas fa-table me-1"></i>
                                 Enlaces Externos
                             </div>
-                            <div class="card-body enlacesExternos">
-                                <ul>
-                                    <li><a href="https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias"
-                                            target="_blank">Consulta RUC</a></li>
-                                    <li><a href="https://www2.sunarp.gob.pe/consulta-vehicular/inicio"
-                                            target="_blank">Consulta
-                                            vehicular SUNARP</a></li>
-                                    <li><a href="https://pvo.osinergmin.gob.pe/msfh5/busquedaRegistroHidrocarburos/init.action"
-                                            target="_blank">Consulta OSINERGMIN</a></li>
-                                    <li><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_consultadgtt/Frm_rep_intra_mercancia.aspx"
-                                            target="_blank">MTC consulta transportista</a></li>
-                                    <li><a href="https://pvo.osinergmin.gob.pe/seguridad/login?error=UP"
-                                            target="_blank">Consulta
-                                            SCOP</a></li>
-                                    <li><a href="https://apps.trabajo.gob.pe/consultas-remype/app/index.html"
-                                            target="_blank">Consulta REMYPE</a></li>
-                                    <li><a href="http://www.aduanet.gob.pe/cl-ad-itconsultadwh/ieITS01Alias?accion=consultar&CG_consulta=1"
-                                            target="_blank">Consulta importador/exportador</a></li>
-                                    <li><a href="https://im01-autorizacion-sprl-production.apps.paas.sunarp.gob.pe/v1/sunarp-services/im/autorizacion/login"
-                                            target="_blank">SUNARP trámites</a></li>
-                                    <li><a href="https://gerenciasac.com" target="_blank">Gerencia SAC</a></li>
-                                </ul>
-                            </div>
+
                         </div>
                     </div>
+
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
@@ -444,6 +508,74 @@
     </script> -->
 
     <!-- <script src="/js/dashboard.js"></script> -->
+
+
+    <style>
+        /* ESTILOS PARA CALENDARIO */
+        /* Cambiar el color de los nombres de los días (Lunes, Martes, etc.) */
+        .fc .fc-col-header-cell-cushion {
+            color: #555;
+            /* Color gris más oscuro */
+            font-weight: bold;
+            /* Nombres de los días en negrita */
+        }
+
+        /* Cambiar el color de las fechas (1, 2, 3, etc.) en la vista mensual */
+        .fc-daygrid-day-number {
+            color: #555;
+            font-weight: bold;
+        }
+
+        /* Cambiar el color de las semanas (números de la semana) */
+        .fc .fc-daygrid-day-top {
+            color: #333;
+            /* Cambia el color a un gris oscuro */
+        }
+
+        /* Cambiar el color de las horas en la vista de día o semana */
+        .fc-timegrid-slot-label-cushion {
+            color: #333;
+            /* Cambia el color a un gris oscuro */
+        }
+
+        /* Cambiar el color de fondo del día actual */
+        /*            .fc-day-today {
+                            background-color: #FCF3CF !important;  Cambia a un tono celeste claro, puedes elegir cualquier color 
+                        }*/
+
+        /*            .calendar-container {
+                            display: flex;
+                        }
+                        .calendar-container .calendar {
+                            flex: 1;
+                            margin-right: 10px;
+                        }*/
+
+        .calendar-container {
+            max-width: 100%;
+            height: 650px;
+            overflow-y: auto;
+        }
+
+        /* Color del encabezado para cada calendario */
+        .social-calendar .fc-toolbar.fc-header-toolbar {
+            background-color: #e0eaff;
+            /* Azul muy claro */
+        }
+
+        .obligaciones-calendar .fc-toolbar.fc-header-toolbar {
+            background-color: #fadbd8;
+            /* Rojo claro */
+        }
+
+        .xentra-calendar .fc-toolbar.fc-header-toolbar {
+            background-color: #DDF6D2;
+            /* Verde claro */
+        }
+    </style>
+
+
+
 </body>
 
 </html>

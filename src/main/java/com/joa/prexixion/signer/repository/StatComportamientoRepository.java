@@ -163,7 +163,7 @@ public class StatComportamientoRepository {
         List<StatComportamiento> statsPeriodos = new ArrayList<>();
 
         String fechaFinal = anio + "-12-01";
-        //String fechaFinal = DateUtils.restarMeses(fechaParametro, 12);
+        // String fechaFinal = DateUtils.restarMeses(fechaParametro, 12);
         String fechaInicial = DateUtils.restarMeses(fechaFinal, 11);
         List<String> periodosList = DateUtils.getFechasBetweenStrings(fechaInicial, fechaFinal);
 
@@ -257,6 +257,85 @@ public class StatComportamientoRepository {
                     stat.setMesPercepciones(statResultSet.getMesPercepciones());
                     stat.setMesRetenciones(statResultSet.getMesRetenciones());
                     stat.setSaldo(statResultSet.getSaldo());
+                }
+            }
+            // Agregamos el objeto asi tenga o no datos en ventas, compras, etc
+            stats.add(stat);
+        }
+
+        return stats;
+    }
+
+    public List<StatComportamiento> getComportamientoIGV(String anio, String username) {
+        List<StatComportamiento> stats = new ArrayList<>();
+        List<StatComportamiento> statsResultSet = new ArrayList<>();
+        List<StatComportamiento> statsPeriodos = new ArrayList<>();
+
+        String fechaFinal = anio + "-12-01";
+        // String fechaFinal = DateUtils.restarMeses(fechaParametro, 12);
+        String fechaInicial = DateUtils.restarMeses(fechaFinal, 11);
+        List<String> periodosList = DateUtils.getFechasBetweenStrings(fechaInicial, fechaFinal);
+
+        for (String string : periodosList) {
+            StatComportamiento stat = new StatComportamiento();
+            stat.setPeriodo(DateUtils.getAbrMonthNameCamelCase(string.substring(5, 7)) + "-" + string.substring(2, 4));
+            stat.setAnio(string.substring(0, 4));
+            statsPeriodos.add(stat);
+        }
+
+        String sql = """
+                SELECT anio, mes, mesIgv
+                FROM (
+                    SELECT anio, mes, mesIgv
+                    FROM PDT621DATANEW pdt621
+                    WHERE ( ( CAST(pdt621.anio + pdt621.mes + '01' as date) <= :fechaFinal)
+                    AND ( CAST(pdt621.anio + pdt621.mes + '01' as date) >= :fechaInicial) )
+                    AND pdt621.idCliente = :idCliente
+
+                    UNION ALL
+
+                    SELECT t.anio, t.mes, t.igvMes as mesIgv
+                    FROM taxReviewPDT621 t
+                    WHERE ( ( CAST(t.anio + t.mes + '01' as date) <= :fechaFinal)
+                    AND ( CAST(t.anio + t.mes + '01' as date) >= :fechaInicial) )
+                    AND t.idCliente = :idCliente
+                    AND NOT EXISTS ( SELECT 1
+                                    FROM pdt621DataNew p
+                                    WHERE p.idCliente = t.idCliente
+                                    AND p.anio = t.anio
+                                    AND p.mes = t.mes
+                                    )
+                ) AS historicoIgv
+                ORDER BY anio, mes asc
+                """;
+
+        Query query = em.createNativeQuery(sql, Tuple.class);
+        query.setParameter("fechaInicial", fechaInicial);
+        query.setParameter("fechaFinal", fechaFinal);
+        query.setParameter("idCliente", username);
+
+        @SuppressWarnings("unchecked")
+        List<Tuple> resultTuples = query.getResultList();
+
+        for (Tuple tuple : resultTuples) {
+            StatComportamiento stat = new StatComportamiento();
+            stat.setPeriodo(DateUtils.getAbrMonthNameCamelCase(tuple.get("mes", String.class)) + "-"
+                    + tuple.get("anio", String.class).substring(2, 4));
+            stat.setMesIgv(tuple.get("mesIgv", BigDecimal.class).toString());
+            statsResultSet.add(stat);
+        }
+
+        for (StatComportamiento statPeriodo : statsPeriodos) {
+            // Agregamos valores por defecto en caso no tengan datos en ventas, compras, etc
+            StatComportamiento stat = new StatComportamiento();
+            stat.setPeriodo(statPeriodo.getPeriodo());
+            stat.setAnio(statPeriodo.getAnio());
+            stat.setMesIgv("0.00");
+            for (StatComportamiento statResultSet : statsResultSet) {
+                if (statPeriodo.getPeriodo().equalsIgnoreCase(statResultSet.getPeriodo())) {
+                    // Agregamos valores ventas, compras, etc en caso se encuentre un periodo
+                    // homólogo en el resultset
+                    stat.setMesIgv(statResultSet.getMesIgv());
                 }
             }
             // Agregamos el objeto asi tenga o no datos en ventas, compras, etc

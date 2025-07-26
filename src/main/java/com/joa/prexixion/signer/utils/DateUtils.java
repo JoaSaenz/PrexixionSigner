@@ -1,5 +1,6 @@
 package com.joa.prexixion.signer.utils;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -97,6 +98,12 @@ public class DateUtils {
     /** Convierte LocalDate a String */
     public static String localDateToString(LocalDate fecha) {
         return fecha.format(FORMATO_FECHA);
+    }
+
+    public static String sqlDateToString(Date sqlDate) {
+        LocalDate localDate = sqlDate.toLocalDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDate.format(formatter);
     }
 
     /** Devuelve el mes (1-12) de una fecha en String */

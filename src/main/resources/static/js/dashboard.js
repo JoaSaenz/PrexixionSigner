@@ -32,6 +32,8 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, graficoGlobal) {
 
       let historicoEnSolesActualChart = document.getElementById(grafico);
 
+      document.getElementById("" + anioLabel).textContent = anio;
+
       let historicoEnSolesData = {
         labels: labelsHS,
 
@@ -121,19 +123,19 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, graficoGlobal) {
                 fontSize: 12,
               },
             },
-            title: {
-              display: true,
-              text: "Histórico en Soles " + anio + " (Ventas y Compras)",
-              fontSize: 18,
-              fontColor: "#333",
-              padding: 20,
-            },
+            // title: {
+            //   display: true,
+            //   text: "Histórico en Soles " + anio + " (Ventas y Compras)",
+            //   fontSize: 18,
+            //   fontColor: "#333",
+            //   padding: 20,
+            // },
             tooltips: {
               callbacks: {
                 label: function (tooltipItem, data) {
                   var value =
                     data.datasets[tooltipItem.datasetIndex].data[
-                    tooltipItem.index
+                      tooltipItem.index
                     ];
                   value = value.toString();
                   return addCommas(Math.round(value));
@@ -323,36 +325,33 @@ function getComportamientoIgv(anio, anioLabel, grafico, graficoGlobal) {
       console.log(data);
       let statsComportamientoIGV = data.statsComportamientoIGV;
 
+      document.getElementById("" + anioLabel).textContent = anio;
+
       let labels = [];
-      let dataVentas = [];
-      let dataCompras = [];
       let dataIgv = [];
-      let dataPorcentajeIgv = [];
       for (var i = 0; i < statsComportamientoIGV.length; i++) {
         labels.push(statsComportamientoIGV[i].periodo);
-        dataVentas.push(statsComportamientoIGV[i].ventas);
-        dataCompras.push(statsComportamientoIGV[i].compras);
         dataIgv.push(statsComportamientoIGV[i].mesIgv);
-        dataPorcentajeIgv.push(statsComportamientoIGV[i].porcentajeIgv);
       }
 
       let comportamientoIGVChart = document.getElementById(grafico);
-      let barColorsComportamientoIGV = dataIgv.map(value => value >= 0 ? 'rgb(55, 178, 5)' : 'rgb(255, 0, 0)');
+      let barColorsComportamientoIGV = dataIgv.map((value) =>
+        value >= 0 ? "rgb(0, 168, 150)" : "rgb(255, 87, 94)"
+      );
 
       let comportamientoIGVData = {
         labels: labels,
 
         datasets: [
           {
-            label: 'IGV',
-            barPercentage: 0.4,
-            categoryPercentage: 0.5,
-            barThickness: 8,
+            label: "IGV",
+            barPercentage: 0.5,
+            categoryPercentage: 0.6,
+            barThickness: undefined,
             backgroundColor: barColorsComportamientoIGV,
-            borderColor: 'rgb(75, 192, 192)',
-            data: dataIgv
-          }
-        ]
+            data: dataIgv,
+          },
+        ],
       };
 
       if (comportamientoIGVChart) {
@@ -360,40 +359,63 @@ function getComportamientoIgv(anio, anioLabel, grafico, graficoGlobal) {
           graficoGlobal.destroy();
         }
         graficoGlobal = new Chart(comportamientoIGVChart, {
-          type: 'horizontalBar',
+          type: "horizontalBar",
           data: comportamientoIGVData,
           options: {
             scales: {
-              xAxes: [{
-                ticks: {
-                  beginAtZero: true,
-                  userCallback: function (value, index, values) {
-                    value = value.toString();
-                    return addCommas(Math.round(value));
-                  }
-                }
-              }]
+              xAxes: [
+                {
+                  gridLines: {
+                    color: "#e0e0e0", // sigue mostrando la grilla horizontal
+                    drawTicks: false, // quita las pequeñas líneas en los ticks
+                    drawBorder: false, // quita la línea vertical del eje
+                  },
+                  ticks: {
+                    fontColor: "#343a40",
+                    fontStyle: "500", // también puedes usar "bold"
+                    fontSize: 12,
+                    beginAtZero: true,
+                    userCallback: function (value, index, values) {
+                      value = value.toString();
+                      return addCommas(Math.round(value));
+                    },
+                  },
+                },
+              ],
+              yAxes: [
+                {
+                  gridLines: {
+                    display: false,
+                  },
+                  ticks: {
+                    beginAtZero: true,
+                    fontColor: "#343a40", // gris oscuro estilo Azia
+                    fontStyle: "500", // o "600" para seminegrita
+                    fontSize: 12,
+                  },
+                },
+              ],
             },
             legend: {
-              display: false
+              display: false,
             },
-            title: {
-              display: true,
-              text: "Comportamiento IGV " + anio,
-              fontSize: 18,
-              fontColor: "#333",
-              padding: 20,
-            },
+            // title: {
+            //   display: true,
+            //   text: "Comportamiento IGV " + anio,
+            //   fontSize: 18,
+            //   fontColor: "#333",
+            //   padding: 20,
+            // },
             tooltips: {
               callbacks: {
                 label: function (tooltipItem, data) {
                   var value = data.datasets[0].data[tooltipItem.index];
                   value = value.toString();
                   return addCommas(Math.round(value));
-                }
-              }
-            }
-          }
+                },
+              },
+            },
+          },
         });
       }
     })
@@ -414,18 +436,16 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
 
       let labelsHS = [];
       let dataVentasHS = [];
-      let dataTotalVentasIgvHS = [];
       let dataComprasHS = [];
-      let dataTotalComprasIgvHS = [];
-      for (var i = 0; i < statsHistoricosEnSoles.length; i++) {
-        labelsHS.push(statsHistoricosEnSoles[i].periodo);
-        dataVentasHS.push(statsHistoricosEnSoles[i].ventas);
-        dataTotalVentasIgvHS.push(statsHistoricosEnSoles[i].totalVentasIgv);
-        dataComprasHS.push(statsHistoricosEnSoles[i].compras);
-        dataTotalComprasIgvHS.push(statsHistoricosEnSoles[i].totalComprasIgv);
+      for (var i = 0; i < statsVentasVsCompras.length; i++) {
+        labelsHS.push(statsVentasVsCompras[i].periodo);
+        dataVentasHS.push(statsVentasVsCompras[i].ventas);
+        dataComprasHS.push(statsVentasVsCompras[i].compras);
       }
 
       let historicoEnSolesActualChart = document.getElementById(grafico);
+
+      document.getElementById("" + anioLabel).textContent = anio;
 
       let historicoEnSolesData = {
         labels: labelsHS,
@@ -433,35 +453,21 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
         datasets: [
           {
             label: "VENTAS",
-            barPercentage: 0.8,
-            categoryPercentage: 0.7,
-            barThickness: undefined,
-            backgroundColor: "rgb(88, 56, 202)",
             data: dataVentasHS,
-          },
-          {
-            label: "VENTAS IGV",
-            barPercentage: 0.8,
-            categoryPercentage: 0.7,
-            barThickness: undefined,
-            backgroundColor: "rgb(183, 173, 226)",
-            data: dataTotalVentasIgvHS,
+            type: "line",
+            fill: false,
+            pointRadius: 5,
+            borderColor: "rgb(183, 173, 226)",
+            pointBackgroundColor: "rgb(88, 56, 202)",
           },
           {
             label: "COMPRAS",
-            barPercentage: 0.8,
-            categoryPercentage: 0.7,
-            barThickness: undefined,
-            backgroundColor: "rgb(0, 168, 150)",
             data: dataComprasHS,
-          },
-          {
-            label: "COMPRAS IGV",
-            barPercentage: 0.8,
-            categoryPercentage: 0.7,
-            barThickness: undefined,
-            backgroundColor: "rgb(145, 224, 214)",
-            data: dataTotalComprasIgvHS,
+            type: "line",
+            fill: false,
+            pointRadius: 5,
+            borderColor: "rgb(145, 224, 214)",
+            pointBackgroundColor: "rgb(0, 168, 150)",
           },
         ],
       };
@@ -475,7 +481,7 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
           data: historicoEnSolesData,
           options: {
             responsive: true,
-            maintainAspectRatio: false,
+            // maintainAspectRatio: false,
             scales: {
               xAxes: [
                 {
@@ -516,19 +522,19 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
                 fontSize: 12,
               },
             },
-            title: {
-              display: true,
-              text: "Histórico en Soles " + anio + " (Ventas y Compras)",
-              fontSize: 18,
-              fontColor: "#333",
-              padding: 20,
-            },
+            // title: {
+            //   display: true,
+            //   text: "Histórico en Soles " + anio + " (Ventas y Compras)",
+            //   fontSize: 18,
+            //   fontColor: "#333",
+            //   padding: 20,
+            // },
             tooltips: {
               callbacks: {
                 label: function (tooltipItem, data) {
                   var value =
                     data.datasets[tooltipItem.datasetIndex].data[
-                    tooltipItem.index
+                      tooltipItem.index
                     ];
                   value = value.toString();
                   return addCommas(Math.round(value));
@@ -544,12 +550,361 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
 
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
-  getHistoricoEnSoles("2024", "historicoEnSolesPasadoAnio", "historicoEnSolesPasadoChart", historicoEnSolesPasadoGlobalChart);
-  getHistoricoEnSoles("2025", "historicoEnSolesActualAnio", "historicoEnSolesActualChart", historicoEnSolesActualGlobalChart);
+  getHistoricoEnSoles(
+    "2024",
+    "historicoEnSolesPasadoAnio",
+    "historicoEnSolesPasadoChart",
+    historicoEnSolesPasadoGlobalChart
+  );
+  getHistoricoEnSoles(
+    "2025",
+    "historicoEnSolesActualAnio",
+    "historicoEnSolesActualChart",
+    historicoEnSolesActualGlobalChart
+  );
 
   getHistoricoIGV("2024", "historicoIGVPasadoAnio", "historicoIGVPasadoTabla");
   getHistoricoIGV("2025", "historicoIGVActualAnio", "historicoIGVActualTabla");
 
-  getComportamientoIgv("2024", "comportamientoIGVPasadoAnio", "comportamientoIGVPasadoChart", comportamientoIGVPasadoGlobalChart);
-  getComportamientoIgv("2025", "comportamientoIGVActualAnio", "comportamientoIGVActualChart", comportamientoIGVActualGlobalChart);
+  getComportamientoIgv(
+    "2024",
+    "comportamientoIGVPasadoAnio",
+    "comportamientoIGVPasadoChart",
+    comportamientoIGVPasadoGlobalChart
+  );
+  getComportamientoIgv(
+    "2025",
+    "comportamientoIGVActualAnio",
+    "comportamientoIGVActualChart",
+    comportamientoIGVActualGlobalChart
+  );
+
+  getVentasVsCompras(
+    "2024",
+    "ventasVsComprasPasadoAnio",
+    "ventasVsComprasPasadoChart",
+    ventasVsComprasPasadoGlobalChart
+  );
+
+  getVentasVsCompras(
+    "2025",
+    "ventasVsComprasActualAnio",
+    "ventasVsComprasActualChart",
+    ventasVsComprasActualGlobalChart
+  );
+
+  //<editor-fold defaultstate="collapsed" desc="CALENDARIO OBLIGACIONES">
+  const calendarObligaciones = new FullCalendar.Calendar(
+    document.getElementById("calendarObligaciones"),
+    {
+      locale: "es", // Establece el idioma a español
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth",
+      },
+      initialView: "dayGridMonth",
+      editable: false,
+      navLinks: true,
+      hiddenDays: [0], // Oculta el día domingo
+      events: {
+        url: "/api/calendar/getObligaciones",
+        method: "GET",
+        failure: function () {
+          alert("Error al cargar los eventos");
+        },
+      },
+      eventContent: function (info) {
+        if (
+          info.event.extendedProps.colorFeriado ||
+          info.event.extendedProps.colorDiasFestivos
+        ) {
+          let content = document.createElement("div");
+          content.className = "fc-event-title";
+
+          //Contenedor de icono + palabra feriado o festivo
+          let contenedorFeriado_Festivo = document.createElement("div");
+          contenedorFeriado_Festivo.style.color = "black";
+          let icono = document.createElement("i");
+          icono.className = "far fa-smile";
+          icono.style.marginRight = "5px";
+          let feriado_Festivo = document.createElement("span");
+          if (info.event.extendedProps.colorFeriado) {
+            feriado_Festivo.textContent = "FERIADO";
+          } else {
+            feriado_Festivo.textContent = "FESTIVO";
+          }
+          feriado_Festivo.style = "font-weight: bold";
+          contenedorFeriado_Festivo.appendChild(icono);
+          contenedorFeriado_Festivo.appendChild(feriado_Festivo);
+
+          let title = document.createElement("div");
+          title.innerHTML = "<strong>" + info.event.title + "</strong>";
+          title.style.color = "black";
+          content.appendChild(contenedorFeriado_Festivo);
+          content.appendChild(title);
+          return { domNodes: [content] };
+        }
+        if (info.event.extendedProps.type === "fiscalizacion") {
+          // Contenedor principal del evento
+          let content = document.createElement("div");
+          content.className = "fc-event-title";
+
+          let iconoString = "";
+          if (info.event.extendedProps.flagFiscalizacion == "PRESENCIAL") {
+            iconoString = "fa fa-users";
+          } else {
+            iconoString = "fa fa-desktop";
+          }
+
+          let icono = document.createElement("i");
+          icono.className = iconoString;
+          icono.style.marginLeft = "3px"; //Espacio entre el margen y el icono
+          icono.style.marginRight = "5px"; //Espacio entre el ícono y el time
+          let time = document.createElement("span");
+          time.textContent = info.event.start.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          time.style = "font-weight: normal";
+          time.style.marginRight = "5px"; //Espacio entre el time y el title
+          let title = document.createElement("span");
+          title.textContent = info.event.title;
+          content.appendChild(icono);
+          content.appendChild(time);
+          content.appendChild(title);
+          return { domNodes: [content] };
+        }
+        if (info.event.extendedProps.type === "fiscalizacionPay") {
+          // Contenedor principal del evento
+          let content = document.createElement("div");
+          content.className = "fc-event-title";
+
+          let time = document.createElement("span");
+          time.textContent = info.event.start.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          time.style = "font-weight: normal";
+          time.style.marginRight = "5px"; //Espacio entre el time y el title
+          let title = document.createElement("span");
+          title.textContent = info.event.title;
+          content.appendChild(time);
+          content.appendChild(title);
+          return { domNodes: [content] };
+        }
+      },
+      eventDidMount: function (info) {
+        //console.log(info);
+        //FERIADOS y DIAS FESTIVOS: Color fondo
+        if (
+          info.event.extendedProps.type === "feriados" ||
+          info.event.extendedProps.type === "diasFestivos"
+        ) {
+          // Pintar toda la celda del día en la vista dayGridMonth
+          if (info.view.type === "dayGridMonth") {
+            let calendarEl = info.el.closest(".fc"); // obtiene el contenedor del calendario actual
+            let dayCell = calendarEl.querySelector(
+              `.fc-day[data-date="${
+                info.event.start.toISOString().split("T")[0]
+              }"]`
+            );
+            if (dayCell) {
+              if (info.event.extendedProps.type === "feriados") {
+                dayCell.style.backgroundColor = "#E6E3F3"; // Color de fondo para feriados
+              } else if (info.event.extendedProps.type === "diasFestivos") {
+                dayCell.style.backgroundColor = "#D2E0FB"; // Color de fondo para dias festivos
+              }
+            }
+          }
+        }
+        //FERIADOS y DIAS FESTIVOS: Color etiqueta
+        if (info.event.extendedProps.colorFeriado) {
+          info.el.style.backgroundColor = info.event.extendedProps.colorFeriado;
+          info.el.style.borderColor = info.event.extendedProps.colorFeriado;
+        }
+        if (info.event.extendedProps.colorDiasFestivos) {
+          info.el.style.backgroundColor =
+            info.event.extendedProps.colorDiasFestivos;
+          info.el.style.borderColor =
+            info.event.extendedProps.colorDiasFestivos;
+        }
+        //FISCALIZACION: Color etiqueta por estado
+        if (info.event.extendedProps.stateFiscalizacion === 2) {
+          info.el.style.backgroundColor = "#DA1212";
+          info.el.style.borderColor = "#DA1212";
+          info.el.style.color = "white";
+        } else if (
+          info.event.extendedProps.stateFiscalizacion === 3 ||
+          info.event.extendedProps.stateFiscalizacion === 5
+        ) {
+          info.el.style.backgroundColor = "#99a3a4";
+          info.el.style.borderColor = "#99a3a4";
+          info.el.style.color = "white";
+          info.el.style.textDecoration = "line-through";
+          info.el.style.textDecorationColor = "black";
+        }
+        //FISCALIZACION PAY: Color etiqueta
+        if (
+          info.event.extendedProps.stateFiscalizacionPay === 2 ||
+          info.event.extendedProps.stateFiscalizacionPay === 10
+        ) {
+          info.el.style.backgroundColor = "#abebc6";
+          info.el.style.borderColor = "#abebc6";
+        } else if (info.event.extendedProps.stateFiscalizacionPay === 5) {
+          info.el.style.backgroundColor = "#98A1BC";
+          info.el.style.borderColor = "#98A1BC";
+          info.el.style.color = "white";
+          info.el.style.textDecoration = "line-through";
+          info.el.style.textDecorationColor = "black";
+        }
+        //TRAMITES SUNAT: Color etiqueta por estado
+        let titleEl = info.el.querySelector(".fc-event-title"); // Selecciona el título del evento
+        if (info.event.extendedProps.stateTramiteSunat === 2) {
+          info.el.style.backgroundColor = "#6495ED";
+          info.el.style.borderColor = "#6495ED";
+          info.el.style.color = "white";
+          if (titleEl) {
+            titleEl.style.textDecoration = "line-through";
+            titleEl.style.textDecorationColor = "black";
+          }
+        }
+      },
+      eventClick: function (info) {
+        if (
+          info.event.extendedProps.type == "fiscalizacion" ||
+          info.event.extendedProps.type == "tramitesSunat"
+        ) {
+          document.getElementById("obligacionTitulo").innerText =
+            info.event.title;
+          document.getElementById("obligacionDetalle").innerText =
+            info.event.start.toLocaleString("es-Es", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            });
+          document.getElementById("obligacionTema").innerText =
+            info.event.extendedProps.topic || "No especificado";
+          document.getElementById("obligacionResponsable").innerText =
+            info.event.extendedProps.attendee || "No especificado";
+          $("#modalObligaciones").modal("show");
+        }
+      },
+    }
+  );
+
+  calendarObligaciones.addEventSource(function (
+    fetchInfo,
+    successCallback,
+    failureCallback
+  ) {
+    fetch("/api/calendar/getFeriados", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Error de red");
+        return res.json();
+      })
+      .then((events) => successCallback(events))
+      .catch((err) => {
+        console.error("Error al cargar eventos del cronograma:", err);
+        failureCallback(err);
+      });
+  });
+
+  calendarObligaciones.render();
+
+  //NO VA PORQUE VIENEN LOS DÍAS COMO EL DÍA DEL CONTADOR, ETC
+  // calendarObligaciones.addEventSource(function (
+  //   fetchInfo,
+  //   successCallback,
+  //   failureCallback
+  // ) {
+  //   fetch("CalendarEventController?action=13", {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //     },
+  //   })
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Error de red");
+  //       return res.json();
+  //     })
+  //     .then((events) => successCallback(events))
+  //     .catch((err) => {
+  //       console.error("Error al cargar eventos del cronograma:", err);
+  //       failureCallback(err);
+  //     });
+  // });
+
+  // VAN LAS FISCALIZACIONES DE LA EMPRESA LOGEADA
+  // calendarObligaciones.addEventSource(function (
+  //   fetchInfo,
+  //   successCallback,
+  //   failureCallback
+  // ) {
+  //   fetch("CalendarEventController?action=11", {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //     },
+  //   })
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Error de red");
+  //       return res.json();
+  //     })
+  //     .then((events) => successCallback(events))
+  //     .catch((err) => {
+  //       console.error("Error al cargar eventos del cronograma:", err);
+  //       failureCallback(err);
+  //     });
+  // });
+
+  // calendarObligaciones.addEventSource(function (
+  //   fetchInfo,
+  //   successCallback,
+  //   failureCallback
+  // ) {
+  //   fetch("CalendarEventController?action=14", {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //     },
+  //   })
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Error de red");
+  //       return res.json();
+  //     })
+  //     .then((events) => successCallback(events))
+  //     .catch((err) => {
+  //       console.error("Error al cargar eventos del cronograma:", err);
+  //       failureCallback(err);
+  //     });
+  // });
+
+  // calendarObligaciones.addEventSource(function (
+  //   fetchInfo,
+  //   successCallback,
+  //   failureCallback
+  // ) {
+  //   fetch("CalendarEventController?action=15", {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //     },
+  //   })
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Error de red");
+  //       return res.json();
+  //     })
+  //     .then((events) => successCallback(events))
+  //     .catch((err) => {
+  //       console.error("Error al cargar eventos del cronograma:", err);
+  //       failureCallback(err);
+  //     });
+  // });
+  //</editor-fold>
 });

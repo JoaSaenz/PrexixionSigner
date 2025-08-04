@@ -237,6 +237,58 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-xl-3">
+                            <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Histórico Renta <span id="historicoRentaPasadoAnio"
+                                            class="text-muted fw-normal"></span>
+                                    </h5>
+                                </div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-striped nowrap" id="historicoRentaPasadoTabla">
+                                        <thead class="table-light">
+                                            <tr class="text-center">
+                                                <th class="table-dashboard-header">PRD</th>
+                                                <th class="table-dashboard-header">INGRESOS</th>
+                                                <th class="table-dashboard-header">RENTA</th>
+                                                <th class="table-dashboard-header">%</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot></tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Histórico Renta <span id="historicoRentaActualAnio"
+                                            class="text-muted fw-normal"></span>
+                                    </h5>
+                                </div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-striped" id="historicoRentaActualTabla">
+                                        <thead class="table-light">
+                                            <tr class="text-center">
+                                                <th class="table-dashboard-header">PRD</th>
+                                                <th class="table-dashboard-header">INGRESOS</th>
+                                                <th class="table-dashboard-header">RENTA</th>
+                                                <th class="table-dashboard-header">%</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot></tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3"></div>
+                        <div class="col-xl-3"></div>
+                    </div>
 
                     <div class="row">
                         <div class="col-xl-3 col-md-6">
@@ -513,30 +565,72 @@
     <style>
         /* ESTILOS PARA CALENDARIO */
         /* Cambiar el color de los nombres de los días (Lunes, Martes, etc.) */
-        .fc .fc-col-header-cell-cushion {
+        /* .fc .fc-col-header-cell-cushion {
             color: #555;
-            /* Color gris más oscuro */
             font-weight: bold;
-            /* Nombres de los días en negrita */
-        }
+        } */
 
         /* Cambiar el color de las fechas (1, 2, 3, etc.) en la vista mensual */
-        .fc-daygrid-day-number {
+        /* .fc-daygrid-day-number {
             color: #555;
             font-weight: bold;
-        }
+        } */
 
         /* Cambiar el color de las semanas (números de la semana) */
-        .fc .fc-daygrid-day-top {
+        /* .fc .fc-daygrid-day-top {
             color: #333;
-            /* Cambia el color a un gris oscuro */
-        }
+        } */
 
         /* Cambiar el color de las horas en la vista de día o semana */
-        .fc-timegrid-slot-label-cushion {
+        /* .fc-timegrid-slot-label-cushion {
             color: #333;
-            /* Cambia el color a un gris oscuro */
+        } */
+
+        /* NUEVOS ESTILOS */
+        .fc {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
         }
+
+        .fc-event {
+            border-radius: 8px;
+            padding: 2px 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: none;
+            font-weight: 600;
+        }
+
+        /* Cabecera del calendario (ej. LUN, MAR...) */
+        .fc .fc-col-header-cell-cushion {
+            font-weight: 600;
+            color: #444;
+        }
+
+        /* Día actual */
+        .fc-day-today {
+            background-color: #f1f1f1 !important;
+        }
+
+        /* Número del día */
+        .fc .fc-daygrid-day-number {
+            font-weight: 500;
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* Espaciado entre celdas */
+        .fc .fc-daygrid-day-frame {
+            padding: 6px;
+        }
+
+        /* Borde sutil entre días */
+        .fc-theme-standard td,
+        .fc-theme-standard th {
+            border: 1px solid #e0e0e0;
+        }
+
+
+
 
         /* Cambiar el color de fondo del día actual */
         /*            .fc-day-today {
@@ -558,20 +652,17 @@
         }
 
         /* Color del encabezado para cada calendario */
-        .social-calendar .fc-toolbar.fc-header-toolbar {
+        /* .social-calendar .fc-toolbar.fc-header-toolbar {
             background-color: #e0eaff;
-            /* Azul muy claro */
         }
 
         .obligaciones-calendar .fc-toolbar.fc-header-toolbar {
             background-color: #fadbd8;
-            /* Rojo claro */
         }
 
         .xentra-calendar .fc-toolbar.fc-header-toolbar {
             background-color: #DDF6D2;
-            /* Verde claro */
-        }
+        } */
     </style>
 
 

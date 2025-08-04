@@ -33,7 +33,7 @@ public class CalendarService {
             Map<String, Object> extendedProps = new HashMap<>();
             extendedProps.put("colorFeriado", "#E6E3F3");
             event.put("extendedProps", extendedProps);
-
+ 
             response.add(event);
         }
 

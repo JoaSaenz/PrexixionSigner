@@ -345,4 +345,92 @@ public class StatComportamientoRepository {
         return stats;
     }
 
+    public List<StatComportamiento> getHistoricoRenta(String anio, String username) {
+        List<StatComportamiento> stats = new ArrayList<>();
+        List<StatComportamiento> statsResultSet = new ArrayList<>();
+        List<StatComportamiento> statsPeriodos = new ArrayList<>();
+
+        String fechaFinal = anio + "-12-01";
+        String fechaInicial = DateUtils.restarMeses(fechaFinal, 11);
+        List<String> periodosList = DateUtils.getFechasBetweenStrings(fechaInicial, fechaFinal);
+
+        for (String string : periodosList) {
+            StatComportamiento stat = new StatComportamiento();
+            stat.setPeriodo(DateUtils.getAbrMonthNameCamelCase(string.substring(5, 7)) + "-" + string.substring(2, 4));
+            statsPeriodos.add(stat);
+        }
+
+        String sql = """
+                SELECT anio, mes, baseRenta, mesRenta,
+                CASE WHEN baseRenta = 0 OR mesRenta = 0
+                     THEN 0
+                     ELSE CAST( ((mesRenta/baseRenta) * 100) AS DECIMAL(18, 1))
+                END AS porcentaje
+                FROM (
+                SELECT anio, mes, baseRenta, mesRenta
+                FROM PDT621DATANEW pdt621
+                WHERE
+                ( ( CAST(pdt621.anio + pdt621.mes + '01' as date) <= :fechaFinal)
+                AND ( CAST(pdt621.anio + pdt621.mes + '01' as date) >= :fechaInicial) )
+                AND pdt621.idCliente = :idCliente
+
+                UNION ALL
+
+                SELECT t.anio, t.mes, t.rentaIngreso as baseRenta, t.rentaMes as mesRenta
+                FROM taxReviewPDT621 t
+                WHERE
+                ( ( CAST(t.anio + t.mes + '01' as date) <= :fechaFinal)
+                AND ( CAST(t.anio + t.mes + '01' as date) >= :fechaInicial) )
+                AND t.idCliente = :idCliente
+                AND NOT EXISTS (
+                SELECT 1
+                		FROM pdt621DataNew p
+                             WHERE p.idCliente = t.idCliente
+                                 AND p.anio = t.anio
+                                 AND p.mes = t.mes
+                )
+                ) AS historicoRenta
+                order by anio, mes asc
+                """;
+
+        Query query = em.createNativeQuery(sql, Tuple.class);
+        query.setParameter("fechaInicial", fechaInicial);
+        query.setParameter("fechaFinal", fechaFinal);
+        query.setParameter("idCliente", username);
+
+        @SuppressWarnings("unchecked")
+        List<Tuple> resultTuples = query.getResultList();
+
+        for (Tuple tuple : resultTuples) {
+            StatComportamiento stat = new StatComportamiento();
+            stat.setPeriodo(DateUtils.getAbrMonthNameCamelCase(tuple.get("mes", String.class)) + "-"
+                    + tuple.get("anio", String.class).substring(2, 4));
+            stat.setBaseRenta(tuple.get("baseRenta", BigDecimal.class).toString());
+            stat.setMesRenta(tuple.get("mesRenta", BigDecimal.class).toString());
+            stat.setPorcentajeRenta(tuple.get("porcentaje", BigDecimal.class).toString());
+            statsResultSet.add(stat);
+        }
+
+        for (StatComportamiento statPeriodo : statsPeriodos) {
+            // Agregamos valores por defecto en caso no tengan datos en baseRenta, mesRenta, etc
+            StatComportamiento stat = new StatComportamiento();
+            stat.setPeriodo(statPeriodo.getPeriodo());
+            stat.setBaseRenta("0.00");
+            stat.setMesRenta("0.00");
+            stat.setPorcentajeRenta("0.0");
+            for (StatComportamiento statResultSet : statsResultSet) {
+                if (statPeriodo.getPeriodo().equalsIgnoreCase(statResultSet.getPeriodo())) {
+                    // Agregamos valores baseRenta, mesRenra, etc en caso se encuentre un periodo
+                    // homólogo en el resultset
+                    stat.setBaseRenta(statResultSet.getBaseRenta());
+                    stat.setMesRenta(statResultSet.getMesRenta());
+                    stat.setPorcentajeRenta(statResultSet.getPorcentajeRenta());
+                }
+            }
+            // Agregamos el objeto asi tenga o no datos en baseRenta, mesRenta, etc
+            stats.add(stat);
+        }
+
+        return stats;
+    }
 }

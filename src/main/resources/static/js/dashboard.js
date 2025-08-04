@@ -135,7 +135,7 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, graficoGlobal) {
                 label: function (tooltipItem, data) {
                   var value =
                     data.datasets[tooltipItem.datasetIndex].data[
-                      tooltipItem.index
+                    tooltipItem.index
                     ];
                   value = value.toString();
                   return addCommas(Math.round(value));
@@ -534,7 +534,7 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
                 label: function (tooltipItem, data) {
                   var value =
                     data.datasets[tooltipItem.datasetIndex].data[
-                      tooltipItem.index
+                    tooltipItem.index
                     ];
                   value = value.toString();
                   return addCommas(Math.round(value));
@@ -544,6 +544,77 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
           },
         });
       }
+    })
+    .catch((err) => console.error("Error al cargar resumen:", err));
+}
+
+function getHistoricoRenta(anio, anioLabel, tabla) {
+  fetch(`/api/dashboard/getHistoricoRenta?anio=${anio}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+
+      //PINTADO DE LA TABLA HISTÓRICO RENTA 1
+      $("#" + tabla + " tbody tr").remove();
+      $("#" + tabla + " tfoot tr").remove();
+      let totalBaseRentaHistoricoRenta = 0;
+      let totalMesRentaHistoricoRenta = 0;
+      let totalPorcentajeHistoricoRenta = 0;
+      let cantidadPorcentajeHistoricoRenta = 0;
+      let promedioPorcentajeHistoricoRenta = 0;
+
+      document.getElementById("" + anioLabel).textContent = anio;
+
+      let statsHistoricoRenta = data.statsHistoricoRenta;
+
+      let k = 1;
+      statsHistoricoRenta.forEach(function (e) {
+        let baseRentaCol = e.baseRenta === '0.00' ? '0' : addCommas(Math.round(e.baseRenta));
+        let mesRentaCol = e.mesRenta === '0.00' ? '0' : addCommas(Math.round(e.mesRenta));
+
+        totalBaseRentaHistoricoRenta += e.baseRenta === '0.00' ? 0 : Math.round(e.baseRenta);
+        totalMesRentaHistoricoRenta += e.mesRenta === '0.00' ? 0 : Math.round(e.mesRenta);
+        if (e.porcentajeRenta != 0) {
+          totalPorcentajeHistoricoRenta += parseFloat(e.porcentajeRenta);
+          cantidadPorcentajeHistoricoRenta++;
+        }
+        k++;
+
+        if (k == statsHistoricoRenta.length) {
+          if (totalPorcentajeHistoricoRenta != 0) {
+            promedioPorcentajeHistoricoRenta = totalPorcentajeHistoricoRenta / cantidadPorcentajeHistoricoRenta;
+          }
+        }
+
+        let dataHistoricoRenta =
+          "<tr >" +
+          "<td class='text-center table-dashboard-body'>" + e.periodo + "</td>" +
+          "<td class='text-end table-dashboard-body-bold'>" + baseRentaCol + "</td>" +
+          "<td class='text-end table-dashboard-body-bold'>" + mesRentaCol + "</td>" +
+          "<td class='text-end table-dashboard-body-bold'>" + e.porcentajeRenta + " %</td>" +
+          "</tr>";
+        $("#" + tabla + " tbody").append(dataHistoricoRenta);
+
+      });
+
+      let totalBaseRentaHistoricoRentaCol = totalBaseRentaHistoricoRenta === 0 ? '0' : addCommas(Math.round(totalBaseRentaHistoricoRenta));
+      let totalMesRentaHistoricoRentaCol = totalMesRentaHistoricoRenta === 0 ? '0' : addCommas(Math.round(totalMesRentaHistoricoRenta));
+      let promedioPorcentajeHistoricoRentaCol = promedioPorcentajeHistoricoRenta === 0 ? '0.0' : promedioPorcentajeHistoricoRenta.toFixed(1);
+
+      let dataHistoricoRentaFoot =
+        "<tr class='total-row'>" +
+        "<td class='text-center table-dashboard-footer'>TOTAL</td>" +
+        "<td class='text-end table-dashboard-footer'>" + totalBaseRentaHistoricoRentaCol + "</td>" +
+        "<td class='text-end table-dashboard-footer'>" + totalMesRentaHistoricoRentaCol + "</td>" +
+        "<td class='text-end table-dashboard-footer'>" + promedioPorcentajeHistoricoRentaCol + " %</td>" +
+        "</tr>";
+      $("#" + tabla + " tfoot").append(dataHistoricoRentaFoot);
     })
     .catch((err) => console.error("Error al cargar resumen:", err));
 }
@@ -593,6 +664,9 @@ document.addEventListener("DOMContentLoaded", function () {
     ventasVsComprasActualGlobalChart
   );
 
+  getHistoricoRenta("2024", "historicoRentaPasadoAnio", "historicoRentaPasadoTabla");
+  getHistoricoRenta("2025", "historicoRentaActualAnio", "historicoRentaActualTabla");
+
   //<editor-fold defaultstate="collapsed" desc="CALENDARIO OBLIGACIONES">
   const calendarObligaciones = new FullCalendar.Calendar(
     document.getElementById("calendarObligaciones"),
@@ -620,26 +694,27 @@ document.addEventListener("DOMContentLoaded", function () {
           info.event.extendedProps.colorDiasFestivos
         ) {
           let content = document.createElement("div");
-          content.className = "fc-event-title";
+          content.className = "fc-event-title ";
 
           //Contenedor de icono + palabra feriado o festivo
           let contenedorFeriado_Festivo = document.createElement("div");
           contenedorFeriado_Festivo.style.color = "black";
+          contenedorFeriado_Festivo.style.textAlign = "center";
           let icono = document.createElement("i");
           icono.className = "far fa-smile";
           icono.style.marginRight = "5px";
           let feriado_Festivo = document.createElement("span");
           if (info.event.extendedProps.colorFeriado) {
-            feriado_Festivo.textContent = "FERIADO";
+            feriado_Festivo.innerHTML = "FERIADO";
           } else {
-            feriado_Festivo.textContent = "FESTIVO";
+            feriado_Festivo.innerHTML = "FESTIVO";
           }
-          feriado_Festivo.style = "font-weight: bold";
+          //feriado_Festivo.style = "font-weight: bold";
           contenedorFeriado_Festivo.appendChild(icono);
           contenedorFeriado_Festivo.appendChild(feriado_Festivo);
 
           let title = document.createElement("div");
-          title.innerHTML = "<strong>" + info.event.title + "</strong>";
+          title.innerHTML = info.event.title;
           title.style.color = "black";
           content.appendChild(contenedorFeriado_Festivo);
           content.appendChild(title);
@@ -705,13 +780,12 @@ document.addEventListener("DOMContentLoaded", function () {
           if (info.view.type === "dayGridMonth") {
             let calendarEl = info.el.closest(".fc"); // obtiene el contenedor del calendario actual
             let dayCell = calendarEl.querySelector(
-              `.fc-day[data-date="${
-                info.event.start.toISOString().split("T")[0]
+              `.fc-day[data-date="${info.event.start.toISOString().split("T")[0]
               }"]`
             );
             if (dayCell) {
               if (info.event.extendedProps.type === "feriados") {
-                dayCell.style.backgroundColor = "#E6E3F3"; // Color de fondo para feriados
+                //dayCell.style.backgroundColor = "#E6E3F3"; // Color de fondo para feriados
               } else if (info.event.extendedProps.type === "diasFestivos") {
                 dayCell.style.backgroundColor = "#D2E0FB"; // Color de fondo para dias festivos
               }

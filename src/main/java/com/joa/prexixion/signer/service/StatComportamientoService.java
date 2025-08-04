@@ -29,4 +29,8 @@ public class StatComportamientoService {
     public List<StatComportamiento> getVentasVsCompras(String anio, String username) {
         return comportamientoRepository.getHistoricoIGV(anio, username);
     }
+
+    public List<StatComportamiento> getHistoricoRenta(String anio, String username) {
+        return comportamientoRepository.getHistoricoRenta(anio, username);
+    }
 }

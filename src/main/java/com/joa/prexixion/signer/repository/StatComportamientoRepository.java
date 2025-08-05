@@ -20,6 +20,58 @@ public class StatComportamientoRepository {
     @PersistenceContext
     private EntityManager em;
 
+    public StatComportamiento getSaludTributaria(String anio, String mes, String username) {
+        String sql = """
+                SELECT
+                (ventasGravadas + ventasGravadas10 + ventasNoGravadas + exportacionesFacturadas + exportacionesEmbarcadas) AS totalVentas,
+                (ventasGravadasIgv + ventasGravadas10Igv) AS totalVentasIgv,
+                (comprasGravadas + comprasGravadas10 + comprasMixtas + comprasNoGravadasExclusicamente + comprasNoGravadas + importaciones) AS totalCompras,
+                (comprasGravadasIgv + comprasGravadas10Igv + comprasMixtasIgv + importacionesIgv) AS totalComprasIgv
+                FROM (
+                SELECT
+                cli.ruc, cli.razonSocial,
+
+                COALESCE(pdt621.ventasG, 0) AS ventasGravadas,
+                COALESCE(pdt621.ventasNetas10, 0) AS ventasGravadas10,
+                COALESCE(pdt621.ventasNg, 0) AS ventasNoGravadas,
+                COALESCE(pdt621.expFactPer, 0) AS exportacionesFacturadas,
+                COALESCE(pdt621.expEmbrPer, 0) AS exportacionesEmbarcadas,
+                CAST ( (COALESCE(pdt621.ventasG, 0) * i.valor) AS DECIMAL(18, 0)) AS ventasGravadasIgv,
+                CAST ( (COALESCE(pdt621.ventasNetas10, 0) * 0.10) AS DECIMAL(18, 0)) AS ventasGravadas10Igv,
+
+                COALESCE(pdt621.comprasG, 0) AS comprasGravadas,
+                COALESCE(pdt621.comprasNetas10, 0) AS comprasGravadas10,
+                COALESCE(pdt621.comprasMixtas, 0) AS comprasMixtas,
+                COALESCE(pdt621.comprasNgE, 0) AS comprasNoGravadasExclusicamente,
+                COALESCE(pdt621.comprasNg, 0) AS comprasNoGravadas,
+                COALESCE(pdt621.impComprasG, 0) AS importaciones,
+                CAST ( (COALESCE(pdt621.comprasG, 0) * i.valor) AS DECIMAL(18, 0)) AS comprasGravadasIgv,
+                CAST ( (COALESCE(pdt621.comprasNetas10, 0) * 0.10) AS DECIMAL(18, 0)) AS comprasGravadas10Igv,
+                CAST ( (COALESCE(pdt621.comprasMixtas, 0) * i.valor * pdt621.coeficiente) AS DECIMAL(18, 0)) AS comprasMixtasIgv,
+                CAST ( (COALESCE(pdt621.impComprasGigv, 0)) AS DECIMAL(18, 0)) AS importacionesIgv
+
+                FROM cliente cli
+                LEFT JOIN PDT621DATANEW pdt621 ON cli.ruc = pdt621.idCliente AND pdt621.anio = :anio AND pdt621.mes = :mes
+                LEFT JOIN igv i ON i.anio = :anio AND i.mes = :mes
+                WHERE cli.ruc = :idCliente
+                ) AS basicData;
+                """;
+
+        Query query = em.createNativeQuery(sql, Tuple.class);
+        query.setParameter("anio", anio);
+        query.setParameter("mes", mes);
+        query.setParameter("idCliente", username);
+        Tuple tuple = (Tuple) query.getSingleResult();
+
+        StatComportamiento stat = new StatComportamiento();
+        stat.setVentas(tuple.get("totalVentas", BigDecimal.class).toString());
+        stat.setTotalVentasIgv(tuple.get("totalVentasIgv", BigDecimal.class).toString());
+        stat.setCompras(tuple.get("totalCompras", BigDecimal.class).toString());
+        stat.setTotalComprasIgv(tuple.get("totalComprasIgv", BigDecimal.class).toString());
+        
+        return stat;
+    }
+
     public List<StatComportamiento> getHistoricoEnSoles(String anio, String username) {
         List<StatComportamiento> stats = new ArrayList<>();
         List<StatComportamiento> statsResultSet = new ArrayList<>();
@@ -412,7 +464,8 @@ public class StatComportamientoRepository {
         }
 
         for (StatComportamiento statPeriodo : statsPeriodos) {
-            // Agregamos valores por defecto en caso no tengan datos en baseRenta, mesRenta, etc
+            // Agregamos valores por defecto en caso no tengan datos en baseRenta, mesRenta,
+            // etc
             StatComportamiento stat = new StatComportamiento();
             stat.setPeriodo(statPeriodo.getPeriodo());
             stat.setBaseRenta("0.00");

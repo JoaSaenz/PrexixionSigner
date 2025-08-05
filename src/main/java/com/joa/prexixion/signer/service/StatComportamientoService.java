@@ -14,6 +14,10 @@ public class StatComportamientoService {
     @Autowired
     StatComportamientoRepository comportamientoRepository;
 
+    public StatComportamiento getSaludTributaria(String anio, String mes, String username) {
+        return comportamientoRepository.getSaludTributaria(anio, mes, username);
+    }
+
     public List<StatComportamiento> getHistoricoEnSoles(String anio, String username) {
         return comportamientoRepository.getHistoricoEnSoles(anio, username);
     }

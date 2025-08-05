@@ -1,9 +1,28 @@
+var saludTributariaGlobalChart;
 var historicoEnSolesPasadoGlobalChart;
 var historicoEnSolesActualGlobalChart;
 var comportamientoIGVPasadoGlobalChart;
 var comportamientoIGVActualGlobalChart;
 var ventasVsComprasPasadoGlobalChart;
 var ventasVsComprasActualGlobalChart;
+
+function getSaludTributaria(anio, mes, grafico, graficoGlobal) {
+  fetch(`/api/dashboard/getSaludTributaria?anio=${anio}`,`mes=${mes}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+
+      console.log(data.statsSaludTributaria);
+
+    })
+    .catch((err) => console.error("Error al cargar resumen:", err));
+
+}
 
 function getHistoricoEnSoles(anio, anioLabel, grafico, graficoGlobal) {
   fetch(`/api/dashboard/getHistoricoEnSoles?anio=${anio}`, {
@@ -621,6 +640,8 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
+  getSaludTributaria("2025","06","saludTributariaChart",saludTributariaGlobalChart)
+
   getHistoricoEnSoles(
     "2024",
     "historicoEnSolesPasadoAnio",

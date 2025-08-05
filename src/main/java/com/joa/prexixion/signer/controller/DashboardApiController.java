@@ -18,6 +18,24 @@ public class DashboardApiController {
     @Autowired
     StatComportamientoService comportamientoService;
 
+    @GetMapping("/getSaludTributaria")
+    public ResponseEntity<Map<String, Object>> getSaludTributaria(
+            @RequestParam String anio,
+            @RequestParam String mes,
+            Authentication authentication) {
+
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("anio", anio);
+        response.put("mes", mes);
+        response.put("usuario", user.getUsername());
+
+        response.put("statsSaludTributaria", comportamientoService.getSaludTributaria(anio, mes, user.getUsername()));
+
+        return ResponseEntity.ok(response);
+    }
+
     // Ejemplo: resumen general por periodo
     @GetMapping("/getHistoricoEnSoles")
     public ResponseEntity<Map<String, Object>> getHistoricoEnSoles(

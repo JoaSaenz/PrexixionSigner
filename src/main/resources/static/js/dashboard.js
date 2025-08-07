@@ -6,8 +6,8 @@ var comportamientoIGVActualGlobalChart;
 var ventasVsComprasPasadoGlobalChart;
 var ventasVsComprasActualGlobalChart;
 
-function getSaludTributaria(anio, mes, grafico, graficoGlobal) {
-  fetch(`/api/dashboard/getSaludTributaria?anio=${anio}`,`mes=${mes}`, {
+function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
+  fetch(`/api/dashboard/getSaludTributaria?anio=${anio}&mes=${mes}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -16,8 +16,116 @@ function getSaludTributaria(anio, mes, grafico, graficoGlobal) {
   })
     .then((res) => res.json())
     .then((data) => {
-
       console.log(data.statsSaludTributaria);
+
+      let statsSaludTributaria = data.statsSaludTributaria;
+      let totalVentasST = statsSaludTributaria.ventas === '0.00' ? 0 : Math.round(statsSaludTributaria.ventas);
+      let totalVentasIgvST = statsSaludTributaria.totalVentasIgv === '0.00' ? 0 : Math.round(statsSaludTributaria.totalVentasIgv);
+      let totalComprasST = statsSaludTributaria.compras === '0.00' ? 0 : Math.round(statsSaludTributaria.compras);
+      let totalComprasIgvST = statsSaludTributaria.totalComprasIgv === '0.00' ? 0 : Math.round(statsSaludTributaria.totalComprasIgv);
+      let dataTotalVentasMasVentasIgvST = totalVentasST + totalVentasIgvST;
+      let dataTotalComprasMasComprasIgvST = totalComprasST + totalComprasIgvST;
+
+      if (dataTotalVentasMasVentasIgvST < dataTotalComprasMasComprasIgvST) {
+        $('#saludTributariaMensaje').text('Alerta, existen posibles contingencias tributarias.');
+      } else {
+        $('#saludTributariaMensaje').text('');
+      }
+
+      //console.log(dataTotalVentasMasVentasIgvST);
+      //console.log(dataTotalComprasMasComprasIgvST);
+
+      Chart.plugins.unregister(ChartDataLabels);
+
+      let saludTributariaChart = document.getElementById(grafico);
+
+      document.getElementById("" + periodoLabel).textContent = anio + "-" + mes;
+
+      let saludTributariaData = {
+        labels: ['VENTAS', 'COMPRAS'],
+
+        datasets: [
+          {
+            label: 'TOTAL',
+            data: [dataTotalVentasMasVentasIgvST, dataTotalComprasMasComprasIgvST],
+            backgroundColor: ['rgb(88, 56, 202)', 'rgb(0, 168, 150)'],
+            borderWidth: 1
+          }
+        ]
+      };
+
+      var allZero = saludTributariaData.datasets[0].data.every(value => value === 0);
+
+      if (saludTributariaChart) {
+        if (graficoGlobal) {
+          graficoGlobal.destroy();
+        }
+        if (allZero) {
+          saludTributariaChart.font = '17px Arial';
+          saludTributariaChart.textAlign = 'center';
+          saludTributariaChart.fillText('NO HAY DATOS DISPONIBLES.', saludTributariaChart.canvas.width / 2, saludTributariaChart.canvas.height / 2);
+        } else {
+          graficoGlobal = new Chart(saludTributariaChart, {
+            type: 'doughnut',
+            data: saludTributariaData,
+            options: {
+              responsive: true,
+              legend: {
+                display: true,
+                position: "top",
+                labels: {
+                  fontColor: "#333",
+                  fontSize: 12,
+                },
+              },
+              animation: {
+                animateScale: true,
+                animateRotate: true
+              },
+              tooltips: {
+                callbacks: {
+                  label: function (tooltipItem, data) {
+                    var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                    value = value.toString();
+                    return addCommas(Math.round(value));
+                  }
+
+                }
+              }
+              ,
+              plugins: {
+                datalabels: {
+                  display: true, // Asegura que las etiquetas se muestren
+                  formatter: (value, context) => {
+                    let sum = 0;
+                    let dataArr = context.chart.data.datasets[0].data;
+                    dataArr.map(data => {
+                      sum += data;
+                    });
+                    let percentage = (value * 100 / sum).toFixed(2) + "%";
+                    return percentage;
+                  },
+                  color: '#fff',
+                  font: {
+                    size: 16, // Tamaño de la fuente en píxeles
+                    weight: 'bold'
+                  },
+                  labels: {
+                    title: {
+                      font: {
+                        size: 16, // Tamaño de la fuente en píxeles
+                        weight: 'bold'
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            plugins: [ChartDataLabels] // Reactivar el plugin para este gráfico
+          });
+
+        }
+      }
 
     })
     .catch((err) => console.error("Error al cargar resumen:", err));
@@ -640,7 +748,7 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
-  getSaludTributaria("2025","06","saludTributariaChart",saludTributariaGlobalChart)
+  getSaludTributaria("2025", "03", "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
 
   getHistoricoEnSoles(
     "2024",

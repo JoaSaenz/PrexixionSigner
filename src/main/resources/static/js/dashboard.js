@@ -6,6 +6,25 @@ var comportamientoIGVActualGlobalChart;
 var ventasVsComprasPasadoGlobalChart;
 var ventasVsComprasActualGlobalChart;
 
+function getValoresMes(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) {
+  fetch(`/api/dashboard/getSaludTributaria?anio=${anio}&mes=${mes}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      let statsSaludTributaria = data.statsSaludTributaria;
+      document.getElementById("" + ventasMes).textContent = statsSaludTributaria.ventas === '0.00' ? 0 : addCommas(Math.round(statsSaludTributaria.ventas));
+      document.getElementById("" + comprasMes).textContent = statsSaludTributaria.compras === '0.00' ? 0 : addCommas(Math.round(statsSaludTributaria.compras));
+      document.getElementById("" + igvMes).textContent = statsSaludTributaria.compras === '0.00' ? 0 : addCommas(Math.round(statsSaludTributaria.compras));
+
+    })
+    .catch((err) => console.error("Error al cargar resumen:", err));
+}
+
 function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
   fetch(`/api/dashboard/getSaludTributaria?anio=${anio}&mes=${mes}`, {
     method: "GET",
@@ -748,6 +767,7 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
+  getValoresMes("2025","03","ventasMes","comprasMes","igvMes","porcentajeMes");
   getSaludTributaria("2025", "03", "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
 
   getHistoricoEnSoles(

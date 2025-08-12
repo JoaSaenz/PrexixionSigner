@@ -19,6 +19,72 @@
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
 
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0 rounded-lg">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                        style="min-width:80px; height:60px; background-color: rgb(88, 56, 202); color: #fff; font-size: 1.5rem;">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div style="padding-left: 20px;">
+                                        <div class="text-muted small">Ventas del mes</div>
+                                        <div class="h4 mb-0 font-weight-bold" style="color: rgb(88, 56, 202);">
+                                            S/ <span id="ventasMes">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0 rounded-lg">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                        style="min-width:80px; height:60px; background-color: rgb(0, 168, 150); color: #fff; font-size: 1.5rem;">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                    <div style="padding-left: 20px;">
+                                        <div class="text-muted small">Compras del mes</div>
+                                        <div class="h4 mb-0 font-weight-bold" style="color: rgb(0, 168, 150);">
+                                            S/ <span id="comprasMes">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0 rounded-lg">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                        style="min-width:80px; height:60px; background-color: rgb(76, 110, 2019); color: #fff; font-size: 1.5rem;">
+                                        <i class="fas fa-file-invoice-dollar"></i>
+                                    </div>
+                                    <div style="padding-left: 20px;">
+                                        <div class="text-muted small">IGV del mes</div>
+                                        <div class="h4 mb-0 font-weight-bold" style="color: rgb(76, 110, 2019);">
+                                            S/ <span id="igvMes">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0 rounded-lg">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                        style="min-width:80px; height:60px; background-color: rgb(139, 123, 207); color: #fff; font-size: 1.5rem;">
+                                        <i class="fas fa-percentage"></i>
+                                    </div>
+                                    <div style="padding-left: 20px;">
+                                        <div class="text-muted small">% Cumplimiento</div>
+                                        <div class="h4 mb-0 font-weight-bold" style="color: rgb(139, 123, 207);">
+                                            <span id="porcentajeMes">0</span> %
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-xl-6">
@@ -81,7 +147,8 @@
                                         <canvas id="saludTributariaChart">
 
                                         </canvas>
-                                        <span class="text-center text-danger font-weight-bold" id="saludTributariaMensaje"></span>
+                                        <span class="text-center text-danger font-weight-bold"
+                                            id="saludTributariaMensaje"></span>
                                     </div>
                                 </div>
                             </div>

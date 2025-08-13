@@ -32,6 +32,7 @@
                                         <div class="h4 mb-0 font-weight-bold" style="color: rgb(88, 56, 202);">
                                             S/ <span id="ventasMes">0</span>
                                         </div>
+                                        <div id="trendVentas" class="kpi-tendencia"></div>
                                     </div>
                                 </div>
                             </div>
@@ -48,6 +49,7 @@
                                         <div class="h4 mb-0 font-weight-bold" style="color: rgb(0, 168, 150);">
                                             S/ <span id="comprasMes">0</span>
                                         </div>
+                                        <div id="trendCompras" class="kpi-tendencia"></div>
                                     </div>
                                 </div>
                             </div>
@@ -64,6 +66,7 @@
                                         <div class="h4 mb-0 font-weight-bold" style="color: rgb(76, 110, 2019);">
                                             S/ <span id="igvMes">0</span>
                                         </div>
+                                        <!--<div id="trendIgv" class="kpi-tendencia"></div>-->
                                     </div>
                                 </div>
                             </div>
@@ -80,6 +83,7 @@
                                         <div class="h4 mb-0 font-weight-bold" style="color: rgb(139, 123, 207);">
                                             <span id="porcentajeMes">0</span> %
                                         </div>
+                                        <!--<div id="trendPorcentaje" class="kpi-tendencia"></div>-->
                                     </div>
                                 </div>
                             </div>
@@ -748,6 +752,31 @@
         .xentra-calendar .fc-toolbar.fc-header-toolbar {
             background-color: #DDF6D2;
         } */
+
+        /* Colores para Tendencias */
+        .kpi-tendencia {
+            font-size: 0.8rem;
+            /* más pequeño */
+            opacity: 0.8;
+            /* color más suave */
+            display: block;
+            margin-top: 4px;
+        }
+
+        .trend-up {
+            color: #28a745;
+            /* verde suave */
+        }
+
+        .trend-down {
+            color: #dc3545;
+            /* rojo suave */
+        }
+
+        .trend-neutral {
+            color: #6c757d;
+            /* gris suave */
+        }
     </style>
 
 

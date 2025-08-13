@@ -1,6 +1,7 @@
 package com.joa.prexixion.signer.repository;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,130 @@ public class StatComportamientoRepository {
 
     @PersistenceContext
     private EntityManager em;
+
+    public StatComportamiento getValoresKpis(String anio, String mes, String username) {
+        // Calcular mes anterior
+        int mesInt = Integer.parseInt(mes);
+        int anioInt = Integer.parseInt(anio);
+
+        if (mesInt == 1) {
+            mesInt = 12;
+            anioInt--;
+        } else {
+            mesInt--;
+        }
+        String mesAnterior = String.format("%02d", mesInt);
+        String anioAnterior = String.valueOf(anioInt);
+
+        String sql = """
+                SELECT anio, mes, ventas, compras, mesIgv,
+                       CASE WHEN ventas = 0 OR mesIgv = 0
+                            THEN 0
+                            ELSE CAST(((mesIgv/ventas) * 100) AS DECIMAL(18, 0))
+                       END AS porcentaje
+                FROM (
+                    -- PERIODO ACTUAL
+                    SELECT anio, mes,
+                           (COALESCE(ventasG,0) + COALESCE(ventasNetas10,0) + COALESCE(ventasNg,0) + COALESCE(expFactPer,0) + COALESCE(expEmbrPer,0)) AS ventas,
+                           (COALESCE(comprasG,0) + COALESCE(comprasNetas10,0) + COALESCE(comprasMixtas,0) + COALESCE(comprasNgE,0) + COALESCE(comprasNg,0) + COALESCE(impComprasG,0)) AS compras,
+                           mesIgv
+                    FROM PDT621DATANEW pdt621
+                    WHERE pdt621.idCliente = :idCliente AND pdt621.anio = :anio AND pdt621.mes = :mes
+
+                    UNION ALL
+
+                    SELECT anio, mes,
+                           (COALESCE(t.ventasGravadas18,0) + COALESCE(t.ventasGravadas10,0) + COALESCE(t.ventasNoGravadas,0) + COALESCE(t.ventasFacturadas,0) + COALESCE(t.ventasEmbarcadas,0)) AS ventas,
+                           (COALESCE(t.comprasGravadas18,0) + COALESCE(t.comprasGravadas10,0) + COALESCE(t.comprasMixtas,0) + COALESCE(t.comprasNoGravadas,0) + COALESCE(t.comprasExoneradas,0) + COALESCE(t.comprasDuas,0)) AS compras,
+                           t.igvMes as mesIgv
+                    FROM taxReviewPDT621 t
+                    WHERE t.idCliente = :idCliente AND t.anio = :anio AND t.mes = :mes
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM pdt621DataNew p
+                        WHERE p.idCliente = t.idCliente
+                          AND p.anio = t.anio
+                          AND p.mes = t.mes
+                    )
+
+                    -- PERIODO ANTERIOR
+                    UNION ALL
+
+                    SELECT anio, mes,
+                           (COALESCE(ventasG,0) + COALESCE(ventasNetas10,0) + COALESCE(ventasNg,0) + COALESCE(expFactPer,0) + COALESCE(expEmbrPer,0)) AS ventas,
+                           (COALESCE(comprasG,0) + COALESCE(comprasNetas10,0) + COALESCE(comprasMixtas,0) + COALESCE(comprasNgE,0) + COALESCE(comprasNg,0) + COALESCE(impComprasG,0)) AS compras,
+                           mesIgv
+                    FROM PDT621DATANEW pdt621
+                    WHERE pdt621.idCliente = :idCliente AND pdt621.anio = :anioAnterior AND pdt621.mes = :mesAnterior
+
+                    UNION ALL
+
+                    SELECT anio, mes,
+                           (COALESCE(t.ventasGravadas18,0) + COALESCE(t.ventasGravadas10,0) + COALESCE(t.ventasNoGravadas,0) + COALESCE(t.ventasFacturadas,0) + COALESCE(t.ventasEmbarcadas,0)) AS ventas,
+                           (COALESCE(t.comprasGravadas18,0) + COALESCE(t.comprasGravadas10,0) + COALESCE(t.comprasMixtas,0) + COALESCE(t.comprasNoGravadas,0) + COALESCE(t.comprasExoneradas,0) + COALESCE(t.comprasDuas,0)) AS compras,
+                           t.igvMes as mesIgv
+                    FROM taxReviewPDT621 t
+                    WHERE t.idCliente = :idCliente AND t.anio = :anioAnterior AND t.mes = :mesAnterior
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM pdt621DataNew p
+                        WHERE p.idCliente = t.idCliente
+                          AND p.anio = t.anio
+                          AND p.mes = t.mes
+                    )
+                ) AS valoresKpis
+                """;
+
+        Query query = em.createNativeQuery(sql, Tuple.class);
+        query.setParameter("anio", anio);
+        query.setParameter("mes", mes);
+        query.setParameter("anioAnterior", anioAnterior);
+        query.setParameter("mesAnterior", mesAnterior);
+        query.setParameter("idCliente", username);
+
+        @SuppressWarnings("unchecked")
+        List<Tuple> results = query.getResultList();
+
+        // Identificar actual y anterior
+        Tuple actual = results.stream()
+                .filter(r -> r.get("anio").equals(anio) && r.get("mes").equals(mes))
+                .findFirst().orElse(null);
+
+        Tuple anterior = results.stream()
+                .filter(r -> r.get("anio").equals(anioAnterior) && r.get("mes").equals(mesAnterior))
+                .findFirst().orElse(null);
+
+        StatComportamiento stat = new StatComportamiento();
+        if (actual != null) {
+            stat.setVentas(actual.get("ventas", BigDecimal.class).toString());
+            stat.setCompras(actual.get("compras", BigDecimal.class).toString());
+            stat.setMesIgv(actual.get("mesIgv", BigDecimal.class).toString());
+            stat.setPorcentajeIgv(actual.get("porcentaje", BigDecimal.class).toString());
+        }
+
+        // Calcular tendencias
+        if (actual != null && anterior != null) {
+            stat.setTrendVentas(
+                    calcTrend(actual.get("ventas", BigDecimal.class), anterior.get("ventas", BigDecimal.class)));
+            stat.setTrendCompras(
+                    calcTrend(actual.get("compras", BigDecimal.class), anterior.get("compras", BigDecimal.class)));
+            //stat.setTrendIgv(calcTrend(actual.get("mesIgv", BigDecimal.class), anterior.get("mesIgv", BigDecimal.class)));
+            //stat.setTrendPorcentaje(calcTrend(actual.get("porcentaje", BigDecimal.class), anterior.get("porcentaje", BigDecimal.class)));
+        }
+
+        return stat;
+    }
+
+    private String calcTrend(BigDecimal actual, BigDecimal anterior) {
+        if (anterior == null || anterior.compareTo(BigDecimal.ZERO) == 0) {
+            return "0";
+        }
+        BigDecimal diferencia = actual.subtract(anterior);
+        BigDecimal porcentaje = diferencia
+                .divide(anterior, 4, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100));
+        return porcentaje.setScale(2, RoundingMode.HALF_UP).toString();
+    }
 
     public StatComportamiento getSaludTributaria(String anio, String mes, String username) {
         String sql = """
@@ -68,7 +193,7 @@ public class StatComportamientoRepository {
         stat.setTotalVentasIgv(tuple.get("totalVentasIgv", BigDecimal.class).toString());
         stat.setCompras(tuple.get("totalCompras", BigDecimal.class).toString());
         stat.setTotalComprasIgv(tuple.get("totalComprasIgv", BigDecimal.class).toString());
-        
+
         return stat;
     }
 

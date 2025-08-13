@@ -26,4 +26,10 @@ public class StatComportamiento {
     // GRÁFICO CANTIDAD DOCUMENTOS
     private String nroDocumentosVentas;
     private String nroDocumentosCompras;
+
+    //TREND KPIs
+    private String trendVentas;
+    private String trendCompras;
+    private String trendIgv;
+    private String trendPorcentaje;
 }

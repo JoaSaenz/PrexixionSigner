@@ -6,8 +6,8 @@ var comportamientoIGVActualGlobalChart;
 var ventasVsComprasPasadoGlobalChart;
 var ventasVsComprasActualGlobalChart;
 
-function getValoresMes(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) {
-  fetch(`/api/dashboard/getSaludTributaria?anio=${anio}&mes=${mes}`, {
+function getValoresKpis(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) {
+  fetch(`/api/dashboard/getValoresKpis?anio=${anio}&mes=${mes}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -16,13 +16,37 @@ function getValoresMes(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) {
   })
     .then((res) => res.json())
     .then((data) => {
-      let statsSaludTributaria = data.statsSaludTributaria;
-      document.getElementById("" + ventasMes).textContent = statsSaludTributaria.ventas === '0.00' ? 0 : addCommas(Math.round(statsSaludTributaria.ventas));
-      document.getElementById("" + comprasMes).textContent = statsSaludTributaria.compras === '0.00' ? 0 : addCommas(Math.round(statsSaludTributaria.compras));
-      document.getElementById("" + igvMes).textContent = statsSaludTributaria.compras === '0.00' ? 0 : addCommas(Math.round(statsSaludTributaria.compras));
+      console.log(data);
+      let statsValoresKpis = data.statsValoresKpis;
+      document.getElementById("" + ventasMes).textContent = statsValoresKpis.ventas === '0.00' ? 0 : addCommas(Math.round(statsValoresKpis.ventas));
+      document.getElementById("" + comprasMes).textContent = statsValoresKpis.compras === '0.00' ? 0 : addCommas(Math.round(statsValoresKpis.compras));
+      document.getElementById("" + igvMes).textContent = statsValoresKpis.mesIgv === '0.00' ? 0 : addCommas(Math.round(statsValoresKpis.mesIgv));
+      document.getElementById("" + porcentjeMes).textContent = statsValoresKpis.porcentajeIgv;
 
+      // Pintar tendencias
+      pintarTendencia("trendVentas", statsValoresKpis.trendVentas);
+      pintarTendencia("trendCompras", statsValoresKpis.trendCompras);
+      //pintarTendencia("trendIgv", statsValoresKpis.trendIgv);
+      //pintarTendencia("trendPorcentaje", statsValoresKpis.trendPorcentaje);
     })
     .catch((err) => console.error("Error al cargar resumen:", err));
+}
+
+// Función para poner flechas y colores
+function pintarTendencia(idElemento, valor) {
+  const elem = document.getElementById(idElemento);
+  const num = parseFloat(valor);
+
+  if (isNaN(num) || num === 0) {
+    elem.textContent = `→ 0% respecto al mes pasado`;
+    elem.className = "kpi-tendencia trend-neutral";
+  } else if (num > 0) {
+    elem.textContent = `↑ ${num}% respecto al mes pasado`;
+    elem.className = "kpi-tendencia trend-up";
+  } else {
+    elem.textContent = `↓ ${Math.abs(num)}% respecto al mes pasado`;
+    elem.className = "kpi-tendencia trend-down";
+  }
 }
 
 function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
@@ -767,7 +791,7 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
-  getValoresMes("2025","03","ventasMes","comprasMes","igvMes","porcentajeMes");
+  getValoresKpis("2025", "03", "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
   getSaludTributaria("2025", "03", "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
 
   getHistoricoEnSoles(

@@ -36,6 +36,24 @@ public class DashboardApiController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/getSparklineKpis")
+    public ResponseEntity<Map<String, Object>> getSparklineKpis(
+            @RequestParam String anio,
+            @RequestParam String mes,
+            Authentication authentication) {
+
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("anio", anio);
+        response.put("mes", mes);
+        response.put("usuario", user.getUsername());
+
+        response.put("statsSparklineKpis", comportamientoService.getSparklineKpis(anio, mes, user.getUsername()));
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/getSaludTributaria")
     public ResponseEntity<Map<String, Object>> getSaludTributaria(
             @RequestParam String anio,

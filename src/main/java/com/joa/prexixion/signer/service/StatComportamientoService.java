@@ -17,6 +17,10 @@ public class StatComportamientoService {
     public StatComportamiento getValoresKpis(String anio, String mes, String username) {
         return comportamientoRepository.getValoresKpis(anio, mes, username);
     }
+    
+    public List<StatComportamiento> getSparklineKpis(String anio, String mes, String username) {
+        return comportamientoRepository.getSparklineKpis(anio, mes, username);
+    }
 
     public StatComportamiento getSaludTributaria(String anio, String mes, String username) {
         return comportamientoRepository.getSaludTributaria(anio, mes, username);

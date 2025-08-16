@@ -197,6 +197,75 @@ public class StatComportamientoRepository {
         }
     }
 
+    public List<StatComportamiento> getSparklineKpis(String anio, String mes, String username) {
+        List<StatComportamiento> stats = new ArrayList<>();
+
+        String fechaFinal = anio + "-" + mes + "-01";
+        String fechaInicial = DateUtils.restarMeses(fechaFinal, 6);
+
+        String sql = """
+                SELECT anio, mes, ventas, compras, mesIgv,
+                CASE WHEN ventas = 0 OR mesIgv = 0
+                     THEN 0
+                     ELSE CAST( ((mesIgv/ventas) * 100) AS DECIMAL(18, 0))
+                END AS porcentaje, mesPer, mesRet, saldo
+                FROM (
+                    SELECT anio, mes,
+                        (COALESCE(ventasG,0) + COALESCE(ventasNetas10,0) + COALESCE(ventasNg,0) + COALESCE(expFactPer,0) + COALESCE(expEmbrPer,0)) AS ventas,
+                        (COALESCE(comprasG,0) + COALESCE(comprasNetas10,0) + COALESCE(comprasMixtas,0) + COALESCE(comprasNgE,0) + COALESCE(comprasNg,0) + COALESCE(impComprasG,0)) AS compras,
+                        mesIgv, mesPer, mesRet,
+                        (COALESCE(mesIgv,0) + COALESCE(mesPer,0) + COALESCE(mesRet,0)) AS saldo
+                    FROM PDT621DATANEW pdt621
+                    WHERE ( ( CAST(pdt621.anio + pdt621.mes + '01' as date) <= :fechaFinal)
+                    AND ( CAST(pdt621.anio + pdt621.mes + '01' as date) >= :fechaInicial) )
+                    AND pdt621.idCliente = :idCliente
+
+                    UNION ALL
+
+                    SELECT t.anio, t.mes,
+                        (COALESCE(t.ventasGravadas18,0) + COALESCE(t.ventasGravadas10,0) + COALESCE(t.ventasNoGravadas,0) + COALESCE(t.ventasFacturadas,0) + COALESCE(t.ventasEmbarcadas,0)) AS ventas,
+                        (COALESCE(t.comprasGravadas18,0) + COALESCE(t.comprasGravadas10,0) + COALESCE(t.comprasMixtas,0) + COALESCE(t.comprasNoGravadas,0) + COALESCE(t.comprasExoneradas,0) + COALESCE(t.comprasDuas,0)) AS compras,
+                        t.igvMes as mesIgv, t.percepcionesMes as mesPer, t.retencionesMes as mesRet,
+                        (COALESCE(t.igvMes,0) + COALESCE(t.percepcionesMes,0) + COALESCE(t.retencionesMes,0)) AS saldo
+                    FROM taxReviewPDT621 t
+                    WHERE ( ( CAST(t.anio + t.mes + '01' as date) <= :fechaFinal)
+                    AND ( CAST(t.anio + t.mes + '01' as date) >= :fechaInicial) )
+                    AND t.idCliente = :idCliente
+                    AND NOT EXISTS ( SELECT 1
+                                    FROM pdt621DataNew p
+                                    WHERE p.idCliente = t.idCliente
+                                    AND p.anio = t.anio
+                                    AND p.mes = t.mes
+                                    )
+                ) AS historicoIgv
+                ORDER BY anio, mes asc
+                """;
+
+        Query query = em.createNativeQuery(sql, Tuple.class);
+        query.setParameter("fechaInicial", fechaInicial);
+        query.setParameter("fechaFinal", fechaFinal);
+        query.setParameter("idCliente", username);
+
+        @SuppressWarnings("unchecked")
+        List<Tuple> resultTuples = query.getResultList();
+
+        for (Tuple tuple : resultTuples) {
+            StatComportamiento stat = new StatComportamiento();
+            stat.setPeriodo(DateUtils.getAbrMonthNameCamelCase(tuple.get("mes", String.class)) + "-"
+                    + tuple.get("anio", String.class).substring(2, 4));
+            stat.setVentas(tuple.get("ventas", BigDecimal.class).toString());
+            stat.setCompras(tuple.get("compras", BigDecimal.class).toString());
+            stat.setMesIgv(tuple.get("mesIgv", BigDecimal.class).toString());
+            stat.setPorcentajeIgv(tuple.get("porcentaje", BigDecimal.class).toString());
+            stat.setMesPercepciones(tuple.get("mesPer", BigDecimal.class).toString());
+            stat.setMesRetenciones(tuple.get("mesRet", BigDecimal.class).toString());
+            stat.setSaldo(tuple.get("saldo", BigDecimal.class).toString());
+            stats.add(stat);
+        }
+
+        return stats;
+    }
+
     public StatComportamiento getSaludTributaria(String anio, String mes, String username) {
         String sql = """
                 SELECT

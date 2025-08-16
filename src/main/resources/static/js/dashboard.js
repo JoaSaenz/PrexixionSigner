@@ -904,6 +904,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const historicoVentas = [1733391, 1865783, 1113326, 1561027, 1463239];
   renderSparklineVentas(historicoVentas);
 
+  getSparklineKpis("2025", "03", "");
+
   getSaludTributaria("2025", "03", "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
 
   getHistoricoEnSoles(

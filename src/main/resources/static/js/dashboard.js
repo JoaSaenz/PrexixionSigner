@@ -26,8 +26,8 @@ function getValoresKpis(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) 
       // Pintar tendencias
       pintarTendencia("trendVentas", statsValoresKpis.trendVentas);
       pintarTendencia("trendCompras", statsValoresKpis.trendCompras);
-      //pintarTendencia("trendIgv", statsValoresKpis.trendIgv);
-      //pintarTendencia("trendPorcentaje", statsValoresKpis.trendPorcentaje);
+      pintarTendencia("trendIgv", statsValoresKpis.trendIgv);
+      pintarTendencia("trendPorcentaje", statsValoresKpis.trendPorcentaje);
     })
     .catch((err) => console.error("Error al cargar resumen:", err));
 }
@@ -35,6 +35,7 @@ function getValoresKpis(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) 
 // Función para poner flechas y colores
 function pintarTendencia(idElemento, valor) {
   const elem = document.getElementById(idElemento);
+  console.log(valor);
   const num = parseFloat(valor);
 
   if (isNaN(num) || num === 0) {
@@ -48,6 +49,113 @@ function pintarTendencia(idElemento, valor) {
     elem.className = "kpi-tendencia trend-down";
   }
 }
+
+function renderSparklineVentas(data) {
+  const ctx = document.getElementById('sparkVentas').getContext('2d');
+
+  // 🔹 Plugin para sombra en la línea + degradado extra hacia abajo
+  Chart.plugins.register({
+    beforeDatasetsDraw: function (chart) {
+      const ctx = chart.ctx;
+      ctx.save();
+
+      chart.data.datasets.forEach((dataset, i) => {
+        const meta = chart.getDatasetMeta(i);
+        if (!meta.hidden && dataset.type !== 'bar') {
+          // Sombra alrededor de la línea
+          ctx.shadowColor = 'rgba(88, 56, 202, 0.25)';
+          ctx.shadowBlur = 4;   // un poco más difuso
+          ctx.shadowOffsetX = 2;
+          ctx.shadowOffsetY = 3;
+
+          // 🔹 Degradado vertical debajo de la línea
+          const gradient = ctx.createLinearGradient(0, 0, 0, chart.chartArea.bottom);
+          gradient.addColorStop(0, 'rgba(88, 56, 202, 0.15)');
+          gradient.addColorStop(0.2, 'rgba(88, 56, 202, 0.05)');
+          gradient.addColorStop(1, 'rgba(88, 56, 202, 0)');
+
+          dataset.backgroundColor = gradient;
+          dataset.fill = true; // aplica solo este degradado
+        }
+      });
+    },
+    afterDatasetsDraw: function (chart) {
+      chart.ctx.restore();
+    }
+  });
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.map(function (_, i) { return i + 1; }),
+      datasets: [{
+        data: data,
+        borderColor: 'rgb(88, 56, 202)',
+        borderWidth: 2,
+        fill: false,        // inicialmente sin relleno
+        lineTension: 0.4,
+        pointRadius: 0,
+        pointHitRadius: 15
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      legend: { display: false },
+      layout: { padding: { top: 10, bottom: 10 } },
+      tooltips: {
+        enabled: false,
+        custom: function (tooltipModel) {
+          let tooltipEl = document.getElementById('chartjs-tooltip');
+          if (!tooltipEl) {
+            tooltipEl = document.createElement('div');
+            tooltipEl.id = 'chartjs-tooltip';
+            tooltipEl.style.position = 'absolute';
+            tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+            tooltipEl.style.color = '#fff';
+            tooltipEl.style.padding = '4px 8px';
+            tooltipEl.style.borderRadius = '4px';
+            tooltipEl.style.pointerEvents = 'none';
+            tooltipEl.style.fontSize = '0.8rem';
+            document.body.appendChild(tooltipEl);
+          }
+
+          if (tooltipModel.opacity === 0) {
+            tooltipEl.style.opacity = 0;
+            return;
+          }
+
+          if (tooltipModel.body) {
+            const bodyLines = tooltipModel.body.map(item => item.lines);
+            const formatted = bodyLines.map(value => {
+              const num = parseFloat(value);
+              if (!isNaN(num)) {
+                return `S/. ${num.toLocaleString('es-PE', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
+                })}`;
+              }
+              return value;
+            });
+            tooltipEl.innerHTML = formatted.join('<br>');
+          }
+
+          const position = this._chart.canvas.getBoundingClientRect();
+          tooltipEl.style.opacity = 1;
+          tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+          tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+        }
+      },
+      hover: { mode: 'nearest', intersect: false },
+      scales: {
+        xAxes: [{ display: false }],
+        yAxes: [{ display: false }]
+      },
+      elements: { line: { borderCapStyle: 'round' } }
+    }
+  });
+}
+
 
 function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
   fetch(`/api/dashboard/getSaludTributaria?anio=${anio}&mes=${mes}`, {
@@ -791,7 +899,11 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
-  getValoresKpis("2025", "03", "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
+  getValoresKpis("2024", "07", "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
+
+  const historicoVentas = [1733391, 1865783, 1113326, 1561027, 1463239];
+  renderSparklineVentas(historicoVentas);
+
   getSaludTributaria("2025", "03", "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
 
   getHistoricoEnSoles(

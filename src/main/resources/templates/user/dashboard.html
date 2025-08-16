@@ -20,7 +20,7 @@
                     </ol>
 
                     <div class="row">
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <!-- <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card shadow-sm border-0 rounded-lg">
                                 <div class="card-body d-flex align-items-center">
                                     <div class="d-flex justify-content-center align-items-center rounded-lg"
@@ -33,6 +33,38 @@
                                             S/ <span id="ventasMes">0</span>
                                         </div>
                                         <div id="trendVentas" class="kpi-tendencia"></div>
+                                        
+                                        <div class="sparkline-container">
+                                            <canvas id="sparkVentas"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0 rounded-lg">
+                                <div class="card-body d-flex flex-column">
+
+                                    <!-- Parte superior: Icono + textos -->
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                            style="min-width:80px; height:60px; background-color: rgb(88, 56, 202); color: #fff; font-size: 1.5rem;">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div style="padding-left: 20px;">
+                                            <div class="text-muted small">Ventas del mes</div>
+                                            <div class="h4 mb-0 font-weight-bold" style="color: rgb(88, 56, 202);">
+                                                S/ <span id="ventasMes">0</span>
+                                            </div>
+                                            <div id="trendVentas" class="kpi-tendencia"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Parte inferior: Sparkline ocupa todo el ancho -->
+                                    <div class="sparkline-container mt-2">
+                                        <canvas id="sparkVentas"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +98,7 @@
                                         <div class="h4 mb-0 font-weight-bold" style="color: rgb(76, 110, 2019);">
                                             S/ <span id="igvMes">0</span>
                                         </div>
-                                        <!--<div id="trendIgv" class="kpi-tendencia"></div>-->
+                                        <div id="trendIgv" class="kpi-tendencia"></div>
                                     </div>
                                 </div>
                             </div>
@@ -79,11 +111,11 @@
                                         <i class="fas fa-percentage"></i>
                                     </div>
                                     <div style="padding-left: 20px;">
-                                        <div class="text-muted small">% Cumplimiento</div>
+                                        <div class="text-muted small">%</div>
                                         <div class="h4 mb-0 font-weight-bold" style="color: rgb(139, 123, 207);">
                                             <span id="porcentajeMes">0</span> %
                                         </div>
-                                        <!--<div id="trendPorcentaje" class="kpi-tendencia"></div>-->
+                                        <div id="trendPorcentaje" class="kpi-tendencia"></div>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +170,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-2">
+                        <div class="col-xl-4">
                             <div class="card mb-4">
                                 <div class="px-4 pt-4 pb-1 text-center">
                                     <h5 class="fw-bold text-dark mb-0">
@@ -776,6 +808,27 @@
         .trend-neutral {
             color: #6c757d;
             /* gris suave */
+        }
+
+        /** .sparkline-container {
+            height: 70px;
+            
+            margin-top: 8px;
+            
+            position: relative; 
+        } */
+
+        .sparkline-container {
+            width: 100%;
+            height: 60px;
+            /* ajusta según prefieras */
+
+        }
+
+        .sparkline-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+            overflow: visible !important;
         }
     </style>
 

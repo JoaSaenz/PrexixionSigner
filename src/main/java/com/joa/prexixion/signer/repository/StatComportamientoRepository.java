@@ -127,8 +127,11 @@ public class StatComportamientoRepository {
                     calcTrend(actual.get("ventas", BigDecimal.class), anterior.get("ventas", BigDecimal.class)));
             stat.setTrendCompras(
                     calcTrend(actual.get("compras", BigDecimal.class), anterior.get("compras", BigDecimal.class)));
-            //stat.setTrendIgv(calcTrend(actual.get("mesIgv", BigDecimal.class), anterior.get("mesIgv", BigDecimal.class)));
-            //stat.setTrendPorcentaje(calcTrend(actual.get("porcentaje", BigDecimal.class), anterior.get("porcentaje", BigDecimal.class)));
+
+            stat.setTrendIgv(calcTrendEspecial(actual.get("mesIgv", BigDecimal.class),
+                    anterior.get("mesIgv", BigDecimal.class)));
+            stat.setTrendPorcentaje(calcTrendEspecial(actual.get("porcentaje", BigDecimal.class),
+                    anterior.get("porcentaje", BigDecimal.class)));
         }
 
         return stat;
@@ -143,6 +146,55 @@ public class StatComportamientoRepository {
                 .divide(anterior, 4, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100));
         return porcentaje.setScale(2, RoundingMode.HALF_UP).toString();
+    }
+
+    private String calcTrendEspecial(BigDecimal actual, BigDecimal anterior) {
+        if (anterior == null || anterior.compareTo(BigDecimal.ZERO) == 0) {
+            return "0";
+        }
+
+        // Caso 1: Ambos positivos → cálculo normal
+        if (anterior.compareTo(BigDecimal.ZERO) > 0 && actual.compareTo(BigDecimal.ZERO) > 0) {
+            return calcTrend(actual, anterior);
+        }
+
+        // Caso 2: Ambos negativos
+        if (anterior.compareTo(BigDecimal.ZERO) < 0 && actual.compareTo(BigDecimal.ZERO) < 0) {
+            BigDecimal absAnterior = anterior.abs();
+            BigDecimal absActual = actual.abs();
+            BigDecimal diferencia = absActual.subtract(absAnterior);
+
+            // Si aumenta la pérdida → tendencia negativa
+            if (diferencia.compareTo(BigDecimal.ZERO) > 0) {
+                return "-" + diferencia.divide(absAnterior, 4, RoundingMode.HALF_UP)
+                        .multiply(BigDecimal.valueOf(100))
+                        .setScale(2, RoundingMode.HALF_UP);
+            } else {
+                // Si reduce la pérdida → tendencia positiva
+                return diferencia.abs().divide(absAnterior, 4, RoundingMode.HALF_UP)
+                        .multiply(BigDecimal.valueOf(100))
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .toString();
+            }
+        }
+
+        // Caso 3: Cambió de signo
+        BigDecimal absAnterior = anterior.abs();
+        BigDecimal absActual = actual.abs();
+        BigDecimal cambio = absActual.add(absAnterior); // suma de magnitudes
+
+        BigDecimal porcentajeCambio = cambio
+                .divide(absAnterior, 4, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        // Si pasó de positivo a negativo → devolver negativo
+        if (anterior.compareTo(BigDecimal.ZERO) > 0 && actual.compareTo(BigDecimal.ZERO) < 0) {
+            return "-" + porcentajeCambio.toString();
+        } else {
+            // Negativo a positivo → devolver positivo
+            return porcentajeCambio.toString();
+        }
     }
 
     public StatComportamiento getSaludTributaria(String anio, String mes, String username) {

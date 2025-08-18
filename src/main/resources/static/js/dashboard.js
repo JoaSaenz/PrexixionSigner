@@ -1,3 +1,7 @@
+var sparkVentasGlobalChart;
+var sparkComprasGlobalChart;
+var sparkIgvGlobalChart;
+var sparkPorcentajeGlobalChart;
 var saludTributariaGlobalChart;
 var historicoEnSolesPasadoGlobalChart;
 var historicoEnSolesActualGlobalChart;
@@ -50,112 +54,258 @@ function pintarTendencia(idElemento, valor) {
   }
 }
 
-function renderSparklineVentas(data) {
-  const ctx = document.getElementById('sparkVentas').getContext('2d');
+// function renderSparklineVentas(data) {
+//   const ctx = document.getElementById('sparkVentas').getContext('2d');
 
-  // 🔹 Plugin para sombra en la línea + degradado extra hacia abajo
-  Chart.plugins.register({
-    beforeDatasetsDraw: function (chart) {
-      const ctx = chart.ctx;
-      ctx.save();
+//   // 🔹 Plugin para sombra en la línea + degradado extra hacia abajo
+//   Chart.plugins.register({
+//     beforeDatasetsDraw: function (chart) {
+//       const ctx = chart.ctx;
+//       ctx.save();
 
-      chart.data.datasets.forEach((dataset, i) => {
-        const meta = chart.getDatasetMeta(i);
-        if (!meta.hidden && dataset.type !== 'bar') {
-          // Sombra alrededor de la línea
-          ctx.shadowColor = 'rgba(88, 56, 202, 0.25)';
-          ctx.shadowBlur = 4;   // un poco más difuso
-          ctx.shadowOffsetX = 2;
-          ctx.shadowOffsetY = 3;
+//       chart.data.datasets.forEach((dataset, i) => {
+//         const meta = chart.getDatasetMeta(i);
+//         if (!meta.hidden && dataset.type !== 'bar') {
+//           // Sombra alrededor de la línea
+//           ctx.shadowColor = 'rgba(88, 56, 202, 0.25)';
+//           ctx.shadowBlur = 4;   // un poco más difuso
+//           ctx.shadowOffsetX = 2;
+//           ctx.shadowOffsetY = 3;
 
-          // 🔹 Degradado vertical debajo de la línea
-          const gradient = ctx.createLinearGradient(0, 0, 0, chart.chartArea.bottom);
-          gradient.addColorStop(0, 'rgba(88, 56, 202, 0.15)');
-          gradient.addColorStop(0.2, 'rgba(88, 56, 202, 0.05)');
-          gradient.addColorStop(1, 'rgba(88, 56, 202, 0)');
+//           // 🔹 Degradado vertical debajo de la línea
+//           const gradient = ctx.createLinearGradient(0, 0, 0, chart.chartArea.bottom);
+//           gradient.addColorStop(0, 'rgba(88, 56, 202, 0.15)');
+//           gradient.addColorStop(0.2, 'rgba(88, 56, 202, 0.05)');
+//           gradient.addColorStop(1, 'rgba(88, 56, 202, 0)');
 
-          dataset.backgroundColor = gradient;
-          dataset.fill = true; // aplica solo este degradado
+//           dataset.backgroundColor = gradient;
+//           dataset.fill = true; // aplica solo este degradado
+//         }
+//       });
+//     },
+//     afterDatasetsDraw: function (chart) {
+//       chart.ctx.restore();
+//     }
+//   });
+
+//   new Chart(ctx, {
+//     type: 'line',
+//     data: {
+//       labels: data.map(function (_, i) { return i + 1; }),
+//       datasets: [{
+//         data: data,
+//         borderColor: 'rgb(88, 56, 202)',
+//         borderWidth: 2,
+//         fill: false,        // inicialmente sin relleno
+//         lineTension: 0.4,
+//         pointRadius: 0,
+//         pointHitRadius: 15
+//       }]
+//     },
+//     options: {
+//       responsive: true,
+//       maintainAspectRatio: false,
+//       legend: { display: false },
+//       layout: { padding: { top: 10, bottom: 10 } },
+//       tooltips: {
+//         enabled: false,
+//         custom: function (tooltipModel) {
+//           let tooltipEl = document.getElementById('chartjs-tooltip');
+//           if (!tooltipEl) {
+//             tooltipEl = document.createElement('div');
+//             tooltipEl.id = 'chartjs-tooltip';
+//             tooltipEl.style.position = 'absolute';
+//             tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+//             tooltipEl.style.color = '#fff';
+//             tooltipEl.style.padding = '4px 8px';
+//             tooltipEl.style.borderRadius = '4px';
+//             tooltipEl.style.pointerEvents = 'none';
+//             tooltipEl.style.fontSize = '0.8rem';
+//             document.body.appendChild(tooltipEl);
+//           }
+
+//           if (tooltipModel.opacity === 0) {
+//             tooltipEl.style.opacity = 0;
+//             return;
+//           }
+
+//           if (tooltipModel.body) {
+//             const bodyLines = tooltipModel.body.map(item => item.lines);
+//             const formatted = bodyLines.map(value => {
+//               const num = parseFloat(value);
+//               if (!isNaN(num)) {
+//                 return `S/. ${num.toLocaleString('es-PE', {
+//                   minimumFractionDigits: 0,
+//                   maximumFractionDigits: 0
+//                 })}`;
+//               }
+//               return value;
+//             });
+//             tooltipEl.innerHTML = formatted.join('<br>');
+//           }
+
+//           const position = this._chart.canvas.getBoundingClientRect();
+//           tooltipEl.style.opacity = 1;
+//           tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+//           tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+//         }
+//       },
+//       hover: { mode: 'nearest', intersect: false },
+//       scales: {
+//         xAxes: [{ display: false }],
+//         yAxes: [{ display: false }]
+//       },
+//       elements: { line: { borderCapStyle: 'round' } }
+//     }
+//   });
+// }
+
+function getSparklineKpis(anio, mes, grafico, graficoGlobal) {
+  fetch(`/api/dashboard/getSparklineKpis?anio=${anio}&mes=${mes}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      let statsSparklineKpis = data.statsSparklineKpis;
+      let labelsSK = [];
+      let dataVentasSK = [];
+      let dataComprasSK = [];
+      let dataIgvSK = [];
+      let dataPorcentajeSK = [];
+      for (var i = 0; i < statsSparklineKpis.length; i++) {
+        labelsSK.push(statsSparklineKpis[i].periodo);
+        dataVentasSK.push(statsSparklineKpis[i].ventas);
+        dataComprasSK.push(statsSparklineKpis[i].compras);
+        dataIgvSK.push(statsSparklineKpis[i].mesIgv);
+        dataPorcentajeSK.push(statsSparklineKpis[i].porcentajeIgv);
+      }
+
+      // Variables dinámicas
+      let colorData;
+      let backgroundColorData;
+      let chartData;
+      let formatoTooltip;
+
+      switch (grafico) {
+        case 'sparkVentasChart':
+          colorData = 'rgb(88, 56, 202)';
+          backgroundColorData = 'rgba(88, 56, 202, 0.2)';
+          chartData = dataVentasSK;
+          formatoTooltip = (num) => `S/. ${num.toLocaleString('es-PE', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          })}`;
+          break;
+        case 'sparkComprasChart':
+          colorData = 'rgb(0, 168, 150)';
+          backgroundColorData = 'rgba(0, 168, 150, 0.2)';
+          chartData = dataComprasSK;
+          formatoTooltip = (num) => `S/. ${num.toLocaleString('es-PE', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          })}`;
+          break;
+        case 'sparkIgvChart':
+          colorData = 'rgb(76, 110, 219)';
+          backgroundColorData = 'rgba(76, 110, 219, 0.2)';
+          chartData = dataIgvSK;
+          formatoTooltip = (num) => `S/. ${num.toLocaleString('es-PE', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          })}`;
+          break;
+        case 'sparkPorcentajeChart':
+          colorData = 'rgb(139, 123, 207)';
+          backgroundColorData = 'rgba(139, 123, 207, 0.2)';
+          chartData = dataPorcentajeSK;
+          formatoTooltip = (num) => `${Math.round(num)} %`;
+          break;
+      }
+
+      let sparklineKpiChart = document.getElementById(grafico).getContext('2d');
+
+      let sparklineKpiData = {
+        //labels: chartData.map(function (_, i) { return i + 1; }),
+        labels: labelsSK,
+        datasets: [{
+          data: chartData,
+          borderColor: colorData,
+          backgroundColor: backgroundColorData,
+          borderWidth: 2,
+          fill: true,
+          //fill: false,        // inicialmente sin relleno
+          lineTension: 0.4,
+          pointRadius: 0,
+          pointHitRadius: 15
+        }]
+      };
+
+      if (sparklineKpiChart) {
+        if (graficoGlobal) {
+          graficoGlobal.destroy();
         }
-      });
-    },
-    afterDatasetsDraw: function (chart) {
-      chart.ctx.restore();
-    }
-  });
+        graficoGlobal = new Chart(sparklineKpiChart, {
+          type: 'line',
+          data: sparklineKpiData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: { display: false },
+            layout: { padding: { top: 10, bottom: 10 } },
+            tooltips: {
+              enabled: false,
+              custom: function (tooltipModel) {
+                let tooltipEl = document.getElementById('chartjs-tooltip');
+                if (!tooltipEl) {
+                  tooltipEl = document.createElement('div');
+                  tooltipEl.id = 'chartjs-tooltip';
+                  tooltipEl.style.position = 'absolute';
+                  tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+                  tooltipEl.style.color = '#fff';
+                  tooltipEl.style.padding = '4px 8px';
+                  tooltipEl.style.borderRadius = '4px';
+                  tooltipEl.style.pointerEvents = 'none';
+                  tooltipEl.style.fontSize = '0.8rem';
+                  document.body.appendChild(tooltipEl);
+                }
 
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: data.map(function (_, i) { return i + 1; }),
-      datasets: [{
-        data: data,
-        borderColor: 'rgb(88, 56, 202)',
-        borderWidth: 2,
-        fill: false,        // inicialmente sin relleno
-        lineTension: 0.4,
-        pointRadius: 0,
-        pointHitRadius: 15
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      legend: { display: false },
-      layout: { padding: { top: 10, bottom: 10 } },
-      tooltips: {
-        enabled: false,
-        custom: function (tooltipModel) {
-          let tooltipEl = document.getElementById('chartjs-tooltip');
-          if (!tooltipEl) {
-            tooltipEl = document.createElement('div');
-            tooltipEl.id = 'chartjs-tooltip';
-            tooltipEl.style.position = 'absolute';
-            tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
-            tooltipEl.style.color = '#fff';
-            tooltipEl.style.padding = '4px 8px';
-            tooltipEl.style.borderRadius = '4px';
-            tooltipEl.style.pointerEvents = 'none';
-            tooltipEl.style.fontSize = '0.8rem';
-            document.body.appendChild(tooltipEl);
-          }
+                if (tooltipModel.opacity === 0) {
+                  tooltipEl.style.opacity = 0;
+                  return;
+                }
 
-          if (tooltipModel.opacity === 0) {
-            tooltipEl.style.opacity = 0;
-            return;
-          }
+                if (tooltipModel.dataPoints && tooltipModel.dataPoints.length) {
+                  const dp = tooltipModel.dataPoints[0];
+                  const periodo = dp.xLabel;             // ← viene de labelsSK
+                  const valor = Number(dp.yLabel);       // ← tu dato numérico
 
-          if (tooltipModel.body) {
-            const bodyLines = tooltipModel.body.map(item => item.lines);
-            const formatted = bodyLines.map(value => {
-              const num = parseFloat(value);
-              if (!isNaN(num)) {
-                return `S/. ${num.toLocaleString('es-PE', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0
-                })}`;
+                  tooltipEl.innerHTML = `<div style="opacity:.8;margin-bottom:2px">${periodo}</div>
+                  <div><strong>${formatoTooltip(valor)}</strong></div>`;
+                }
+
+                const position = this._chart.canvas.getBoundingClientRect();
+                tooltipEl.style.opacity = 1;
+                tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+                tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
               }
-              return value;
-            });
-            tooltipEl.innerHTML = formatted.join('<br>');
+            },
+            hover: { mode: 'nearest', intersect: false },
+            scales: {
+              xAxes: [{ display: false }],
+              yAxes: [{ display: false }]
+            },
+            elements: { line: { borderCapStyle: 'round' } }
           }
+        });
+      }
 
-          const position = this._chart.canvas.getBoundingClientRect();
-          tooltipEl.style.opacity = 1;
-          tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
-          tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
-        }
-      },
-      hover: { mode: 'nearest', intersect: false },
-      scales: {
-        xAxes: [{ display: false }],
-        yAxes: [{ display: false }]
-      },
-      elements: { line: { borderCapStyle: 'round' } }
-    }
-  });
+    })
+    .catch((err) => console.error("Error al cargar resumen:", err));
 }
-
 
 function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
   fetch(`/api/dashboard/getSaludTributaria?anio=${anio}&mes=${mes}`, {
@@ -899,12 +1049,15 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
-  getValoresKpis("2024", "07", "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
+  getValoresKpis("2025", "03", "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
 
-  const historicoVentas = [1733391, 1865783, 1113326, 1561027, 1463239];
-  renderSparklineVentas(historicoVentas);
+  // const historicoVentas = [1733391, 1865783, 1113326, 1561027, 1463239];
+  // renderSparklineVentas(historicoVentas);
 
-  getSparklineKpis("2025", "03", "");
+  getSparklineKpis("2025", "03", "sparkVentasChart", sparkVentasGlobalChart);
+  getSparklineKpis("2025", "03", "sparkComprasChart", sparkComprasGlobalChart);
+  getSparklineKpis("2025", "03", "sparkIgvChart", sparkIgvGlobalChart);
+  getSparklineKpis("2025", "03", "sparkPorcentajeChart", sparkPorcentajeGlobalChart);
 
   getSaludTributaria("2025", "03", "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
 

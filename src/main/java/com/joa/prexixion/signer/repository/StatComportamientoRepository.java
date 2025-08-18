@@ -201,7 +201,7 @@ public class StatComportamientoRepository {
         List<StatComportamiento> stats = new ArrayList<>();
 
         String fechaFinal = anio + "-" + mes + "-01";
-        String fechaInicial = DateUtils.restarMeses(fechaFinal, 6);
+        String fechaInicial = DateUtils.restarMeses(fechaFinal, 11);
 
         String sql = """
                 SELECT anio, mes, ventas, compras, mesIgv,

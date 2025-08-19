@@ -1049,6 +1049,32 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
+
+   getGraficos(0);
+
+  //ON CLICK
+  $('#prevAnio').on('click', async function () {
+    getGraficos(-1);
+  })
+  $('#nextAnio').on('click', async function () {
+    getGraficos(1);
+  })
+
+  async function getGraficos(evento) {
+    var anioHTML = document.getElementById('anio').innerHTML;
+
+    let anio = await $.ajax({
+      url: "/api/dateUtils/getAnio",
+      type: 'POST',
+      data: { anio: anioHTML, evento: evento },
+      dataType: 'json'
+    });
+    console.log(anio);
+  }
+
+
+
+
   getValoresKpis("2025", "03", "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
 
   // const historicoVentas = [1733391, 1865783, 1113326, 1561027, 1463239];

@@ -111,4 +111,16 @@ public class DateUtils {
         return stringToLocalDate(fecha).getMonthValue();
     }
 
+    //ADD YEARS
+    public static String addYears(String someday, int nroYears) {
+        LocalDate someLocalDate = stringToLocalDate(someday);
+        return localDateToString(someLocalDate.plusYears(nroYears));
+    }
+
+    //REDUCE YEARS
+    public static String minusYears(String someday, int nroYears) {
+        LocalDate someLocalDate = stringToLocalDate(someday);
+        return localDateToString(someLocalDate.minusYears(nroYears));
+    }
+
 }

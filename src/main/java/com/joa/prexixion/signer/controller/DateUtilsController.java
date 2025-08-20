@@ -19,28 +19,25 @@ import com.joa.prexixion.signer.utils.DateUtils;
 @RequestMapping("/api/dateUtils")
 public class DateUtilsController {
 
-    @Autowired
-    DateUtils dateUtils;
-
     @GetMapping("/getAnio")
-    public ResponseEntity<Map<String, Object>> addYears(
+    public ResponseEntity<Map<String, Object>> getAnio(
             @RequestParam String anio,
             @RequestParam int evento) {
 
         Map<String, Object> response = new HashMap<>();
-        response.put("anio", anio);
-        response.put("evento", evento);
 
+        String fecha = anio + "-01-01";
+        String valorAnio = "";
         switch (evento) {
             case -1:
-                anio = dateUtils.minusYears(anio, 1);
+                valorAnio = DateUtils.minusYears(fecha, 1);
                 break;
             case 1:
-                anio = dateUtils.addYears(anio, 1);
+                valorAnio = DateUtils.addYears(fecha, 1);
                 break;
         }
-
-        response.put("getAnio", anio);
+        valorAnio = valorAnio.substring(0,4);
+        response.put("valorAnio", valorAnio);
 
         return ResponseEntity.ok(response);
     }

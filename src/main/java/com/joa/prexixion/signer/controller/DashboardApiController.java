@@ -3,6 +3,8 @@ package com.joa.prexixion.signer.controller;
 import com.joa.prexixion.signer.security.CustomUserDetails;
 import com.joa.prexixion.signer.service.StatComportamientoService;
 
+import ch.qos.logback.core.model.Model;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

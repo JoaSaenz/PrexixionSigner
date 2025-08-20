@@ -6,8 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.joa.prexixion.signer.security.CustomUserDetails;
+import com.joa.prexixion.signer.utils.DateUtils;
 
 @Controller
 @RequestMapping("/user")
@@ -21,6 +23,10 @@ public class UserController {
             CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
             String nombreFront = userDetails.getFrontNombreUsuario();
             model.addAttribute("nombreUsuario", nombreFront);
+
+            //Anio
+            String anioActual = DateUtils.getYear();
+            model.addAttribute("anioActual", anioActual);
 
         } catch (Exception e) {
             model.addAttribute("error", "Error al acceder al dashboard: " + e.getMessage());

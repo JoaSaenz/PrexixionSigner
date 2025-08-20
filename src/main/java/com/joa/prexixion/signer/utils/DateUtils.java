@@ -7,6 +7,9 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DateUtils {
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -121,6 +124,10 @@ public class DateUtils {
     public static String minusYears(String someday, int nroYears) {
         LocalDate someLocalDate = stringToLocalDate(someday);
         return localDateToString(someLocalDate.minusYears(nroYears));
+    }
+
+    public static String getYear() {
+        return String.valueOf(LocalDate.now().getYear());
     }
 
 }

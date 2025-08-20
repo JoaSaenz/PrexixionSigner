@@ -20,7 +20,6 @@ function getValoresKpis(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) 
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       let statsValoresKpis = data.statsValoresKpis;
       document.getElementById("" + ventasMes).textContent = statsValoresKpis.ventas === '0.00' ? 0 : addCommas(Math.round(statsValoresKpis.ventas));
       document.getElementById("" + comprasMes).textContent = statsValoresKpis.compras === '0.00' ? 0 : addCommas(Math.round(statsValoresKpis.compras));
@@ -39,7 +38,6 @@ function getValoresKpis(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) 
 // Función para poner flechas y colores
 function pintarTendencia(idElemento, valor) {
   const elem = document.getElementById(idElemento);
-  console.log(valor);
   const num = parseFloat(valor);
 
   if (isNaN(num) || num === 0) {
@@ -317,7 +315,6 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data.statsSaludTributaria);
 
       let statsSaludTributaria = data.statsSaludTributaria;
       let totalVentasST = statsSaludTributaria.ventas === '0.00' ? 0 : Math.round(statsSaludTributaria.ventas);
@@ -602,8 +599,6 @@ function getHistoricoIGV(anio, anioLabel, tabla) {
 
       document.getElementById("" + anioLabel).textContent = anio;
 
-      console.log(data);
-
       let statsHistoricoIGV = data.statsHistoricoIGV;
 
       let jPdf = 1;
@@ -750,7 +745,6 @@ function getComportamientoIgv(anio, anioLabel, grafico, graficoGlobal) {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       let statsComportamientoIGV = data.statsComportamientoIGV;
 
       document.getElementById("" + anioLabel).textContent = anio;
@@ -986,7 +980,6 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
 
       //PINTADO DE LA TABLA HISTÓRICO RENTA 1
       $("#" + tabla + " tbody tr").remove();
@@ -1050,30 +1043,39 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 // Puedes hacer esto al cargar la página:
 document.addEventListener("DOMContentLoaded", function () {
 
-   getGraficos(0);
-
   //ON CLICK
-  $('#prevAnio').on('click', async function () {
+  $('#prevAnio').on('click', function () {
     getGraficos(-1);
   })
-  $('#nextAnio').on('click', async function () {
+  $('#nextAnio').on('click', function () {
     getGraficos(1);
   })
 
-  async function getGraficos(evento) {
+  function getGraficos(evento) {
     var anioHTML = document.getElementById('anio').innerHTML;
 
-    let anio = await $.ajax({
-      url: "/api/dateUtils/getAnio",
-      type: 'POST',
-      data: { anio: anioHTML, evento: evento },
-      dataType: 'json'
-    });
-    console.log(anio);
+    fetch(`/api/dateUtils/getAnio?anio=${anioHTML}&evento=${evento}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        document.getElementById('anio').innerHTML = data.valorAnio;
+        console.log(data.valorAnio);
+
+        getHistoricoEnSoles(
+          data.valorAnio,
+          "historicoEnSolesActualAnio",
+          "historicoEnSolesActualChart",
+          historicoEnSolesActualGlobalChart
+        );
+
+      })
+      .catch((err) => console.error("Error al cargar resumen:", err));
   }
-
-
-
 
   getValoresKpis("2025", "03", "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
 
@@ -1094,7 +1096,7 @@ document.addEventListener("DOMContentLoaded", function () {
     historicoEnSolesPasadoGlobalChart
   );
   getHistoricoEnSoles(
-    "2025",
+    document.getElementById('anio').innerHTML,
     "historicoEnSolesActualAnio",
     "historicoEnSolesActualChart",
     historicoEnSolesActualGlobalChart

@@ -315,6 +315,7 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
   })
     .then((res) => res.json())
     .then((data) => {
+      console.log(data.statsSaludTributaria);
 
       let statsSaludTributaria = data.statsSaludTributaria;
       let totalVentasST = statsSaludTributaria.ventas === '0.00' ? 0 : Math.round(statsSaludTributaria.ventas);
@@ -353,6 +354,7 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
       };
 
       var allZero = saludTributariaData.datasets[0].data.every(value => value === 0);
+      console.log(allZero);
 
       if (saludTributariaChart) {
         if (graficoGlobal) {
@@ -368,8 +370,9 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
             data: saludTributariaData,
             options: {
               responsive: true,
+              //maintainAspectRatio: false,
               legend: {
-                display: true,
+                display: false,
                 position: "top",
                 labels: {
                   fontColor: "#333",
@@ -417,7 +420,8 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
                     }
                   }
                 }
-              }
+              },
+              //cutoutPercentage: 70
             },
             plugins: [ChartDataLabels] // Reactivar el plugin para este gráfico
           });
@@ -1044,14 +1048,46 @@ function getHistoricoRenta(anio, anioLabel, tabla) {
 document.addEventListener("DOMContentLoaded", function () {
 
   //ON CLICK
-  $('#prevAnio').on('click', function () {
-    getGraficos(-1);
+  $('#prevPeriodo').on('click', function () {
+    getGraficosPorPeriodos(-1);
   })
-  $('#nextAnio').on('click', function () {
-    getGraficos(1);
+  $('#nextPeriodo').on('click', function () {
+    getGraficosPorPeriodos(1);
   })
 
-  function getGraficos(evento) {
+  $('#prevAnio').on('click', function () {
+    getGraficosAnuales(-1);
+  })
+  $('#nextAnio').on('click', function () {
+    getGraficosAnuales(1);
+  })
+
+  function getGraficosPorPeriodos(evento) {
+    var periodoHTML = document.getElementById('periodo').innerHTML;
+
+    fetch(`/api/dateUtils/getPeriodo?periodo=${periodoHTML}&evento=${evento}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        document.getElementById('periodo').innerHTML = data.valorPeriodo;
+
+        //Por Periodos
+        getValoresKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
+        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkVentasChart", sparkVentasGlobalChart);
+        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkComprasChart", sparkComprasGlobalChart);
+        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkIgvChart", sparkIgvGlobalChart);
+        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkPorcentajeChart", sparkPorcentajeGlobalChart);
+        getSaludTributaria(data.valorPeriodoAnio, data.valorPeriodoMes, "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
+      })
+      .catch((err) => console.error("Error al cargar resumen:", err));
+  }
+
+  function getGraficosAnuales(evento) {
     var anioHTML = document.getElementById('anio').innerHTML;
 
     fetch(`/api/dateUtils/getAnio?anio=${anioHTML}&evento=${evento}`, {
@@ -1064,76 +1100,106 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((res) => res.json())
       .then((data) => {
         document.getElementById('anio').innerHTML = data.valorAnio;
-        console.log(data.valorAnio);
 
+        //Anuales
+        getHistoricoEnSoles(
+          data.valorAnioUnoAtras,
+          "historicoEnSolesPasadoAnio",
+          "historicoEnSolesPasadoChart",
+          historicoEnSolesPasadoGlobalChart
+        );
         getHistoricoEnSoles(
           data.valorAnio,
           "historicoEnSolesActualAnio",
           "historicoEnSolesActualChart",
           historicoEnSolesActualGlobalChart
         );
+        getHistoricoIGV(data.valorAnioUnoAtras, "historicoIGVPasadoAnio", "historicoIGVPasadoTabla");
+        getHistoricoIGV(data.valorAnio, "historicoIGVActualAnio", "historicoIGVActualTabla");
+        getComportamientoIgv(
+          data.valorAnioUnoAtras,
+          "comportamientoIGVPasadoAnio",
+          "comportamientoIGVPasadoChart",
+          comportamientoIGVPasadoGlobalChart
+        );
+        getComportamientoIgv(
+          data.valorAnio,
+          "comportamientoIGVActualAnio",
+          "comportamientoIGVActualChart",
+          comportamientoIGVActualGlobalChart
+        );
+        getVentasVsCompras(
+          data.valorAnioUnoAtras,
+          "ventasVsComprasPasadoAnio",
+          "ventasVsComprasPasadoChart",
+          ventasVsComprasPasadoGlobalChart
+        );
+        getVentasVsCompras(
+          data.valorAnio,
+          "ventasVsComprasActualAnio",
+          "ventasVsComprasActualChart",
+          ventasVsComprasActualGlobalChart
+        );
+        getHistoricoRenta(data.valorAnioUnoAtras, "historicoRentaPasadoAnio", "historicoRentaPasadoTabla");
+        getHistoricoRenta(data.valorAnio, "historicoRentaActualAnio", "historicoRentaActualTabla");
 
       })
       .catch((err) => console.error("Error al cargar resumen:", err));
   }
 
-  getValoresKpis("2025", "03", "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
+  //Graficos por Periodos
+  let periodo = document.getElementById('periodo').innerHTML;
+  let [anioPeriodo, mesPeriodo] = periodo.split('-');
+  getValoresKpis(anioPeriodo, mesPeriodo, "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
+  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkVentasChart", sparkVentasGlobalChart);
+  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkComprasChart", sparkComprasGlobalChart);
+  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkIgvChart", sparkIgvGlobalChart);
+  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkPorcentajeChart", sparkPorcentajeGlobalChart);
+  getSaludTributaria(anioPeriodo, mesPeriodo, "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
 
-  // const historicoVentas = [1733391, 1865783, 1113326, 1561027, 1463239];
-  // renderSparklineVentas(historicoVentas);
-
-  getSparklineKpis("2025", "03", "sparkVentasChart", sparkVentasGlobalChart);
-  getSparklineKpis("2025", "03", "sparkComprasChart", sparkComprasGlobalChart);
-  getSparklineKpis("2025", "03", "sparkIgvChart", sparkIgvGlobalChart);
-  getSparklineKpis("2025", "03", "sparkPorcentajeChart", sparkPorcentajeGlobalChart);
-
-  getSaludTributaria("2025", "03", "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
-
+  //Graficos Anuales
+  let anio = document.getElementById('anio').innerHTML;
+  let anioUnoAtras = (parseInt(document.getElementById('anio').innerHTML) - 1).toString();
   getHistoricoEnSoles(
-    "2024",
+    anioUnoAtras,
     "historicoEnSolesPasadoAnio",
     "historicoEnSolesPasadoChart",
     historicoEnSolesPasadoGlobalChart
   );
   getHistoricoEnSoles(
-    document.getElementById('anio').innerHTML,
+    anio,
     "historicoEnSolesActualAnio",
     "historicoEnSolesActualChart",
     historicoEnSolesActualGlobalChart
   );
-
-  getHistoricoIGV("2024", "historicoIGVPasadoAnio", "historicoIGVPasadoTabla");
-  getHistoricoIGV("2025", "historicoIGVActualAnio", "historicoIGVActualTabla");
-
+  getHistoricoIGV(anioUnoAtras, "historicoIGVPasadoAnio", "historicoIGVPasadoTabla");
+  getHistoricoIGV(anio, "historicoIGVActualAnio", "historicoIGVActualTabla");
   getComportamientoIgv(
-    "2024",
+    anioUnoAtras,
     "comportamientoIGVPasadoAnio",
     "comportamientoIGVPasadoChart",
     comportamientoIGVPasadoGlobalChart
   );
   getComportamientoIgv(
-    "2025",
+    anio,
     "comportamientoIGVActualAnio",
     "comportamientoIGVActualChart",
     comportamientoIGVActualGlobalChart
   );
-
   getVentasVsCompras(
-    "2024",
+    anioUnoAtras,
     "ventasVsComprasPasadoAnio",
     "ventasVsComprasPasadoChart",
     ventasVsComprasPasadoGlobalChart
   );
-
   getVentasVsCompras(
-    "2025",
+    anio,
     "ventasVsComprasActualAnio",
     "ventasVsComprasActualChart",
     ventasVsComprasActualGlobalChart
   );
-
-  getHistoricoRenta("2024", "historicoRentaPasadoAnio", "historicoRentaPasadoTabla");
-  getHistoricoRenta("2025", "historicoRentaActualAnio", "historicoRentaActualTabla");
+  getHistoricoRenta(anioUnoAtras, "historicoRentaPasadoAnio", "historicoRentaPasadoTabla");
+  getHistoricoRenta(anio, "historicoRentaActualAnio", "historicoRentaActualTabla");
 
   //<editor-fold defaultstate="collapsed" desc="CALENDARIO OBLIGACIONES">
   const calendarObligaciones = new FullCalendar.Calendar(

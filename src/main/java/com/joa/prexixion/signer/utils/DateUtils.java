@@ -126,8 +126,30 @@ public class DateUtils {
         return localDateToString(someLocalDate.minusYears(nroYears));
     }
 
+    //OBTIENE EL DIA
+    public static LocalDate getToday() {
+        return LocalDate.now();
+    }
+
+    //OBTIENE EL AÑO
     public static String getYear() {
         return String.valueOf(LocalDate.now().getYear());
+    }
+
+    //REDUCE UN MES
+    public static String reduceOneMonth(String someday) {
+        LocalDate someLocalDate = stringToLocalDate(someday);
+        return localDateToString(someLocalDate.minusMonths(1));
+    }
+
+    public static String minusMonths(String someday, int nroMonths) {
+        LocalDate someLocalDate = stringToLocalDate(someday);
+        return localDateToString(someLocalDate.minusMonths(nroMonths));
+    }
+
+    public static String addMonths(String someday, int nroMonths) {
+        LocalDate someLocalDate = stringToLocalDate(someday);
+        return localDateToString(someLocalDate.plusMonths(nroMonths));
     }
 
 }

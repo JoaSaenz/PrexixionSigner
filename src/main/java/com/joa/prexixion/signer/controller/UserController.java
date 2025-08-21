@@ -24,10 +24,13 @@ public class UserController {
             String nombreFront = userDetails.getFrontNombreUsuario();
             model.addAttribute("nombreUsuario", nombreFront);
 
+            //Periodo
+            String periodoActual = (DateUtils.reduceOneMonth(DateUtils.localDateToString(DateUtils.getToday()))).substring(0,7);
+            model.addAttribute("periodoActual", periodoActual);
+
             //Anio
             String anioActual = DateUtils.getYear();
             model.addAttribute("anioActual", anioActual);
-
         } catch (Exception e) {
             model.addAttribute("error", "Error al acceder al dashboard: " + e.getMessage());
         }

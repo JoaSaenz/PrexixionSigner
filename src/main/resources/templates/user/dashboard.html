@@ -14,21 +14,17 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
-                        <h1 class="mb-0">Dashboard</h1>
-
-                        <!-- Filtro de Año -->
-                        <div>
-                            <h6>
-                                <span id="prevAnio" class="hand-pointer"><i class="fas fa-angle-left"></i></span>
-                                <span id="anio" name="anio" th:text="${anioActual}"></span>
-                                <span id="nextAnio" class="hand-pointer"><i class="fas fa-angle-right"></i></span>
-                            </h6>
-                        </div>
-                    </div>
+                    <h1 class="mt-4">Dashboard</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
+
+                    <h6 class="mt-2">
+                        Salud Tributaria
+                        <span id="prevPeriodo" class="hand-pointer ms-3"><i class="fas fa-angle-left"></i></span>
+                        <span id="periodo" name="periodo" th:text="${periodoActual}"></span>
+                        <span id="nextPeriodo" class="hand-pointer"><i class="fas fa-angle-right"></i></span>
+                    </h6>
 
                     <div class="row">
                         <div class="col-xl-3 col-md-6 mb-4">
@@ -120,6 +116,82 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <!-- <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Calendar
+                                    </h5>
+                                </div> -->
+                                <div class="card-body ">
+                                    <div class="calendar-container">
+                                        <div id="calendarObligaciones" class="calendar col-12 obligaciones-calendar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Enlaces de interés
+                                    </h5>
+                                </div>
+                                <div class="card-body enlacesExternos">
+                                    <ul>
+                                        <li><a href="https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias"
+                                                target="_blank">Consulta RUC</a></li>
+                                        <li><a href="https://www2.sunarp.gob.pe/consulta-vehicular/inicio"
+                                                target="_blank">Consulta
+                                                vehicular SUNARP</a></li>
+                                        <li><a href="https://pvo.osinergmin.gob.pe/msfh5/busquedaRegistroHidrocarburos/init.action"
+                                                target="_blank">Consulta OSINERGMIN</a></li>
+                                        <li><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_consultadgtt/Frm_rep_intra_mercancia.aspx"
+                                                target="_blank">MTC consulta transportista</a></li>
+                                        <li><a href="https://pvo.osinergmin.gob.pe/seguridad/login?error=UP"
+                                                target="_blank">Consulta
+                                                SCOP</a></li>
+                                        <li><a href="https://apps.trabajo.gob.pe/consultas-remype/app/index.html"
+                                                target="_blank">Consulta REMYPE</a></li>
+                                        <li><a href="http://www.aduanet.gob.pe/cl-ad-itconsultadwh/ieITS01Alias?accion=consultar&CG_consulta=1"
+                                                target="_blank">Consulta importador/exportador</a></li>
+                                        <li><a href="https://im01-autorizacion-sprl-production.apps.paas.sunarp.gob.pe/v1/sunarp-services/im/autorizacion/login"
+                                                target="_blank">SUNARP trámites</a></li>
+                                        <li><a href="https://gerenciasac.com" target="_blank">Gerencia SAC</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Salud Tributaria <span id="saludTributariaPeriodo"
+                                            class="text-muted fw-normal"></span>
+                                    </h5>
+                                </div>
+                                <div class="card-body ">
+                                    <div class="chart-container">
+                                        <canvas id="saludTributariaChart">
+
+                                        </canvas>
+                                        <span class="text-center text-danger font-weight-bold"
+                                            id="saludTributariaMensaje"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="mt-2">
+                        Históricos
+                        <span id="prevAnio" class="hand-pointer ms-3"><i class="fas fa-angle-left"></i></span>
+                        <span id="anio" name="anio" th:text="${anioActual}"></span>
+                        <span id="nextAnio" class="hand-pointer"><i class="fas fa-angle-right"></i></span>
+                    </h6>
 
                     <div class="row">
                         <div class="col-xl-6">
@@ -339,75 +411,6 @@
                         </div>
                         <div class="col-xl-3"></div>
                         <div class="col-xl-3"></div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <!-- <div class="px-4 pt-4 pb-1 text-center">
-                                    <h5 class="fw-bold text-dark mb-0">
-                                        Calendar
-                                    </h5>
-                                </div> -->
-                                <div class="card-body ">
-                                    <div class="calendar-container">
-                                        <div id="calendarObligaciones" class="calendar col-12 obligaciones-calendar">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-2">
-                            <div class="card mb-4">
-                                <div class="px-4 pt-4 pb-1 text-center">
-                                    <h5 class="fw-bold text-dark mb-0">
-                                        Enlaces de interés
-                                    </h5>
-                                </div>
-                                <div class="card-body enlacesExternos">
-                                    <ul>
-                                        <li><a href="https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias"
-                                                target="_blank">Consulta RUC</a></li>
-                                        <li><a href="https://www2.sunarp.gob.pe/consulta-vehicular/inicio"
-                                                target="_blank">Consulta
-                                                vehicular SUNARP</a></li>
-                                        <li><a href="https://pvo.osinergmin.gob.pe/msfh5/busquedaRegistroHidrocarburos/init.action"
-                                                target="_blank">Consulta OSINERGMIN</a></li>
-                                        <li><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_consultadgtt/Frm_rep_intra_mercancia.aspx"
-                                                target="_blank">MTC consulta transportista</a></li>
-                                        <li><a href="https://pvo.osinergmin.gob.pe/seguridad/login?error=UP"
-                                                target="_blank">Consulta
-                                                SCOP</a></li>
-                                        <li><a href="https://apps.trabajo.gob.pe/consultas-remype/app/index.html"
-                                                target="_blank">Consulta REMYPE</a></li>
-                                        <li><a href="http://www.aduanet.gob.pe/cl-ad-itconsultadwh/ieITS01Alias?accion=consultar&CG_consulta=1"
-                                                target="_blank">Consulta importador/exportador</a></li>
-                                        <li><a href="https://im01-autorizacion-sprl-production.apps.paas.sunarp.gob.pe/v1/sunarp-services/im/autorizacion/login"
-                                                target="_blank">SUNARP trámites</a></li>
-                                        <li><a href="https://gerenciasac.com" target="_blank">Gerencia SAC</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4">
-                            <div class="card mb-4">
-                                <div class="px-4 pt-4 pb-1 text-center">
-                                    <h5 class="fw-bold text-dark mb-0">
-                                        Salud Tributaria <span id="saludTributariaPeriodo"
-                                            class="text-muted fw-normal"></span>
-                                    </h5>
-                                </div>
-                                <div class="card-body ">
-                                    <div class="chart-container">
-                                        <canvas id="saludTributariaChart">
-
-                                        </canvas>
-                                        <span class="text-center text-danger font-weight-bold"
-                                            id="saludTributariaMensaje"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="row">

@@ -293,7 +293,7 @@ public class StatComportamientoRepository {
                 COALESCE(pdt621.impComprasG, 0) AS importaciones,
                 CAST ( (COALESCE(pdt621.comprasG, 0) * i.valor) AS DECIMAL(18, 0)) AS comprasGravadasIgv,
                 CAST ( (COALESCE(pdt621.comprasNetas10, 0) * 0.10) AS DECIMAL(18, 0)) AS comprasGravadas10Igv,
-                CAST ( (COALESCE(pdt621.comprasMixtas, 0) * i.valor * pdt621.coeficiente) AS DECIMAL(18, 0)) AS comprasMixtasIgv,
+                CAST ( (COALESCE(pdt621.comprasMixtas, 0) * i.valor * COALESCE(pdt621.coeficiente,0)) AS DECIMAL(18, 0)) AS comprasMixtasIgv,
                 CAST ( (COALESCE(pdt621.impComprasGigv, 0)) AS DECIMAL(18, 0)) AS importacionesIgv
 
                 FROM cliente cli

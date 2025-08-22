@@ -1,14 +1,14 @@
-var sparkVentasGlobalChart;
-var sparkComprasGlobalChart;
-var sparkIgvGlobalChart;
-var sparkPorcentajeGlobalChart;
+//var sparkVentasGlobalChart;
+//var sparkComprasGlobalChart;
+//var sparkIgvGlobalChart;
+//var sparkPorcentajeGlobalChart;
 var saludTributariaGlobalChart;
-var historicoEnSolesPasadoGlobalChart;
-var historicoEnSolesActualGlobalChart;
-var comportamientoIGVPasadoGlobalChart;
-var comportamientoIGVActualGlobalChart;
-var ventasVsComprasPasadoGlobalChart;
-var ventasVsComprasActualGlobalChart;
+//var historicoEnSolesPasadoGlobalChart;
+//var historicoEnSolesActualGlobalChart;
+//var comportamientoIGVPasadoGlobalChart;
+//var comportamientoIGVActualGlobalChart;
+//var ventasVsComprasPasadoGlobalChart;
+//var ventasVsComprasActualGlobalChart;
 
 function getValoresKpis(anio, mes, ventasMes, comprasMes, igvMes, porcentjeMes) {
   fetch(`/api/dashboard/getValoresKpis?anio=${anio}&mes=${mes}`, {
@@ -52,113 +52,7 @@ function pintarTendencia(idElemento, valor) {
   }
 }
 
-// function renderSparklineVentas(data) {
-//   const ctx = document.getElementById('sparkVentas').getContext('2d');
-
-//   // 🔹 Plugin para sombra en la línea + degradado extra hacia abajo
-//   Chart.plugins.register({
-//     beforeDatasetsDraw: function (chart) {
-//       const ctx = chart.ctx;
-//       ctx.save();
-
-//       chart.data.datasets.forEach((dataset, i) => {
-//         const meta = chart.getDatasetMeta(i);
-//         if (!meta.hidden && dataset.type !== 'bar') {
-//           // Sombra alrededor de la línea
-//           ctx.shadowColor = 'rgba(88, 56, 202, 0.25)';
-//           ctx.shadowBlur = 4;   // un poco más difuso
-//           ctx.shadowOffsetX = 2;
-//           ctx.shadowOffsetY = 3;
-
-//           // 🔹 Degradado vertical debajo de la línea
-//           const gradient = ctx.createLinearGradient(0, 0, 0, chart.chartArea.bottom);
-//           gradient.addColorStop(0, 'rgba(88, 56, 202, 0.15)');
-//           gradient.addColorStop(0.2, 'rgba(88, 56, 202, 0.05)');
-//           gradient.addColorStop(1, 'rgba(88, 56, 202, 0)');
-
-//           dataset.backgroundColor = gradient;
-//           dataset.fill = true; // aplica solo este degradado
-//         }
-//       });
-//     },
-//     afterDatasetsDraw: function (chart) {
-//       chart.ctx.restore();
-//     }
-//   });
-
-//   new Chart(ctx, {
-//     type: 'line',
-//     data: {
-//       labels: data.map(function (_, i) { return i + 1; }),
-//       datasets: [{
-//         data: data,
-//         borderColor: 'rgb(88, 56, 202)',
-//         borderWidth: 2,
-//         fill: false,        // inicialmente sin relleno
-//         lineTension: 0.4,
-//         pointRadius: 0,
-//         pointHitRadius: 15
-//       }]
-//     },
-//     options: {
-//       responsive: true,
-//       maintainAspectRatio: false,
-//       legend: { display: false },
-//       layout: { padding: { top: 10, bottom: 10 } },
-//       tooltips: {
-//         enabled: false,
-//         custom: function (tooltipModel) {
-//           let tooltipEl = document.getElementById('chartjs-tooltip');
-//           if (!tooltipEl) {
-//             tooltipEl = document.createElement('div');
-//             tooltipEl.id = 'chartjs-tooltip';
-//             tooltipEl.style.position = 'absolute';
-//             tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
-//             tooltipEl.style.color = '#fff';
-//             tooltipEl.style.padding = '4px 8px';
-//             tooltipEl.style.borderRadius = '4px';
-//             tooltipEl.style.pointerEvents = 'none';
-//             tooltipEl.style.fontSize = '0.8rem';
-//             document.body.appendChild(tooltipEl);
-//           }
-
-//           if (tooltipModel.opacity === 0) {
-//             tooltipEl.style.opacity = 0;
-//             return;
-//           }
-
-//           if (tooltipModel.body) {
-//             const bodyLines = tooltipModel.body.map(item => item.lines);
-//             const formatted = bodyLines.map(value => {
-//               const num = parseFloat(value);
-//               if (!isNaN(num)) {
-//                 return `S/. ${num.toLocaleString('es-PE', {
-//                   minimumFractionDigits: 0,
-//                   maximumFractionDigits: 0
-//                 })}`;
-//               }
-//               return value;
-//             });
-//             tooltipEl.innerHTML = formatted.join('<br>');
-//           }
-
-//           const position = this._chart.canvas.getBoundingClientRect();
-//           tooltipEl.style.opacity = 1;
-//           tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
-//           tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
-//         }
-//       },
-//       hover: { mode: 'nearest', intersect: false },
-//       scales: {
-//         xAxes: [{ display: false }],
-//         yAxes: [{ display: false }]
-//       },
-//       elements: { line: { borderCapStyle: 'round' } }
-//     }
-//   });
-// }
-
-function getSparklineKpis(anio, mes, grafico, graficoGlobal) {
+function getSparklineKpis(anio, mes, grafico, tipo) {
   fetch(`/api/dashboard/getSparklineKpis?anio=${anio}&mes=${mes}`, {
     method: "GET",
     headers: {
@@ -242,11 +136,14 @@ function getSparklineKpis(anio, mes, grafico, graficoGlobal) {
         }]
       };
 
+      // construyo el nombre dinámicamente
+      let graficoGlobal = `spark${tipo}GlobalChart`;
+
       if (sparklineKpiChart) {
-        if (graficoGlobal) {
-          graficoGlobal.destroy();
+        if (window[graficoGlobal]) {
+          window[graficoGlobal].destroy();
         }
-        graficoGlobal = new Chart(sparklineKpiChart, {
+        window[graficoGlobal] = new Chart(sparklineKpiChart, {
           type: 'line',
           data: sparklineKpiData,
           options: {
@@ -305,7 +202,7 @@ function getSparklineKpis(anio, mes, grafico, graficoGlobal) {
     .catch((err) => console.error("Error al cargar resumen:", err));
 }
 
-function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
+function getSaludTributaria(anio, mes, periodoLabel, grafico) {
   fetch(`/api/dashboard/getSaludTributaria?anio=${anio}&mes=${mes}`, {
     method: "GET",
     headers: {
@@ -317,11 +214,36 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
     .then((data) => {
       console.log(data.statsSaludTributaria);
 
+      // ✅ Validar si viene vacío o null
+      if (!data || !data.statsSaludTributaria) {
+        console.warn("No hay datos para el periodo:", anio, mes);
+
+        let saludTributariaChart = document.getElementById(grafico);
+        if (saludTributariaGlobalChart) {
+          saludTributariaGlobalChart.destroy();
+        }
+
+        // Mensaje en el canvas
+        let ctx = saludTributariaChart.getContext("2d");
+        ctx.clearRect(0, 0, saludTributariaChart.width, saludTributariaChart.height);
+        ctx.font = "9px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("NO HAY DATOS DISPONIBLES.", saludTributariaChart.width / 2, saludTributariaChart.height / 2);
+
+        // limpiar mensaje alerta
+        $('#saludTributariaMensaje').text('');
+        document.getElementById("" + periodoLabel).textContent = anio + "-" + mes;
+
+        return; // 🚪 salir sin intentar graficar
+      }
+
+      // ✅ Continuar si sí hay datos
       let statsSaludTributaria = data.statsSaludTributaria;
       let totalVentasST = statsSaludTributaria.ventas === '0.00' ? 0 : Math.round(statsSaludTributaria.ventas);
       let totalVentasIgvST = statsSaludTributaria.totalVentasIgv === '0.00' ? 0 : Math.round(statsSaludTributaria.totalVentasIgv);
       let totalComprasST = statsSaludTributaria.compras === '0.00' ? 0 : Math.round(statsSaludTributaria.compras);
       let totalComprasIgvST = statsSaludTributaria.totalComprasIgv === '0.00' ? 0 : Math.round(statsSaludTributaria.totalComprasIgv);
+
       let dataTotalVentasMasVentasIgvST = totalVentasST + totalVentasIgvST;
       let dataTotalComprasMasComprasIgvST = totalComprasST + totalComprasIgvST;
 
@@ -331,18 +253,13 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
         $('#saludTributariaMensaje').text('');
       }
 
-      //console.log(dataTotalVentasMasVentasIgvST);
-      //console.log(dataTotalComprasMasComprasIgvST);
-
       Chart.plugins.unregister(ChartDataLabels);
 
       let saludTributariaChart = document.getElementById(grafico);
-
       document.getElementById("" + periodoLabel).textContent = anio + "-" + mes;
 
       let saludTributariaData = {
         labels: ['VENTAS', 'COMPRAS'],
-
         datasets: [
           {
             label: 'TOTAL',
@@ -354,23 +271,23 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
       };
 
       var allZero = saludTributariaData.datasets[0].data.every(value => value === 0);
-      console.log(allZero);
 
       if (saludTributariaChart) {
-        if (graficoGlobal) {
-          graficoGlobal.destroy();
+        if (saludTributariaGlobalChart) {
+          saludTributariaGlobalChart.destroy();
         }
         if (allZero) {
-          saludTributariaChart.font = '17px Arial';
-          saludTributariaChart.textAlign = 'center';
-          saludTributariaChart.fillText('NO HAY DATOS DISPONIBLES.', saludTributariaChart.canvas.width / 2, saludTributariaChart.canvas.height / 2);
+          let ctx = saludTributariaChart.getContext("2d");
+          ctx.clearRect(0, 0, saludTributariaChart.width, saludTributariaChart.height);
+          ctx.font = '9px Arial';
+          ctx.textAlign = 'center';
+          ctx.fillText('NO HAY DATOS DISPONIBLES.', saludTributariaChart.width / 2, saludTributariaChart.height / 2);
         } else {
-          graficoGlobal = new Chart(saludTributariaChart, {
+          saludTributariaGlobalChart = new Chart(saludTributariaChart, {
             type: 'doughnut',
             data: saludTributariaData,
             options: {
               responsive: true,
-              //maintainAspectRatio: false,
               legend: {
                 display: false,
                 position: "top",
@@ -390,51 +307,33 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico, graficoGlobal) {
                     value = value.toString();
                     return addCommas(Math.round(value));
                   }
-
                 }
-              }
-              ,
+              },
               plugins: {
                 datalabels: {
-                  display: true, // Asegura que las etiquetas se muestren
+                  display: true,
                   formatter: (value, context) => {
-                    let sum = 0;
-                    let dataArr = context.chart.data.datasets[0].data;
-                    dataArr.map(data => {
-                      sum += data;
-                    });
+                    let sum = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                     let percentage = (value * 100 / sum).toFixed(2) + "%";
                     return percentage;
                   },
                   color: '#fff',
                   font: {
-                    size: 16, // Tamaño de la fuente en píxeles
+                    size: 16,
                     weight: 'bold'
-                  },
-                  labels: {
-                    title: {
-                      font: {
-                        size: 16, // Tamaño de la fuente en píxeles
-                        weight: 'bold'
-                      }
-                    }
                   }
                 }
-              },
-              //cutoutPercentage: 70
+              }
             },
-            plugins: [ChartDataLabels] // Reactivar el plugin para este gráfico
+            plugins: [ChartDataLabels]
           });
-
         }
       }
-
     })
     .catch((err) => console.error("Error al cargar resumen:", err));
-
 }
 
-function getHistoricoEnSoles(anio, anioLabel, grafico, graficoGlobal) {
+function getHistoricoEnSoles(anio, anioLabel, grafico, tipo) {
   fetch(`/api/dashboard/getHistoricoEnSoles?anio=${anio}`, {
     method: "GET",
     headers: {
@@ -502,11 +401,14 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, graficoGlobal) {
         ],
       };
 
+      // construyo el nombre dinámicamente
+      let graficoGlobal = `historicoEnSoles${tipo}GlobalChart`;
+
       if (historicoEnSolesActualChart) {
-        if (graficoGlobal) {
-          graficoGlobal.destroy();
+        if (window[graficoGlobal]) {
+          window[graficoGlobal].destroy();
         }
-        graficoGlobal = new Chart(historicoEnSolesActualChart, {
+        window[graficoGlobal] = new Chart(historicoEnSolesActualChart, {
           type: "bar",
           data: historicoEnSolesData,
           options: {
@@ -739,7 +641,7 @@ function getHistoricoIGV(anio, anioLabel, tabla) {
     .catch((err) => console.error("Error al cargar resumen:", err));
 }
 
-function getComportamientoIgv(anio, anioLabel, grafico, graficoGlobal) {
+function getComportamientoIgv(anio, anioLabel, grafico, tipo) {
   fetch(`/api/dashboard/getComportamientoIGV?anio=${anio}`, {
     method: "GET",
     headers: {
@@ -780,11 +682,14 @@ function getComportamientoIgv(anio, anioLabel, grafico, graficoGlobal) {
         ],
       };
 
+      // construyo el nombre dinámicamente
+      let graficoGlobal = `comportamientoIGV${tipo}GlobalChart`;
+
       if (comportamientoIGVChart) {
-        if (graficoGlobal) {
-          graficoGlobal.destroy();
+        if (window[graficoGlobal]) {
+          window[graficoGlobal].destroy();
         }
-        graficoGlobal = new Chart(comportamientoIGVChart, {
+        window[graficoGlobal] = new Chart(comportamientoIGVChart, {
           type: "horizontalBar",
           data: comportamientoIGVData,
           options: {
@@ -848,7 +753,7 @@ function getComportamientoIgv(anio, anioLabel, grafico, graficoGlobal) {
     .catch((err) => console.error("Error al cargar resumen:", err));
 }
 
-function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
+function getVentasVsCompras(anio, anioLabel, grafico, tipo) {
   fetch(`/api/dashboard/getVentasVsCompras?anio=${anio}`, {
     method: "GET",
     headers: {
@@ -869,11 +774,11 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
         dataComprasHS.push(statsVentasVsCompras[i].compras);
       }
 
-      let historicoEnSolesActualChart = document.getElementById(grafico);
+      let ventasVsComprasChart = document.getElementById(grafico);
 
       document.getElementById("" + anioLabel).textContent = anio;
 
-      let historicoEnSolesData = {
+      let ventasVsComprasData = {
         labels: labelsHS,
 
         datasets: [
@@ -898,13 +803,16 @@ function getVentasVsCompras(anio, anioLabel, grafico, graficoGlobal) {
         ],
       };
 
-      if (historicoEnSolesActualChart) {
-        if (graficoGlobal) {
-          graficoGlobal.destroy();
+      // construyo el nombre dinámicamente
+      let graficoGlobal = `ventasVsCompras${tipo}GlobalChart`;
+
+      if (ventasVsComprasChart) {
+        if (window[graficoGlobal]) {
+          window[graficoGlobal].destroy();
         }
-        graficoGlobal = new Chart(historicoEnSolesActualChart, {
+        window[graficoGlobal] = new Chart(ventasVsComprasChart, {
           type: "bar",
-          data: historicoEnSolesData,
+          data: ventasVsComprasData,
           options: {
             responsive: true,
             // maintainAspectRatio: false,
@@ -1078,11 +986,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         //Por Periodos
         getValoresKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
-        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkVentasChart", sparkVentasGlobalChart);
-        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkComprasChart", sparkComprasGlobalChart);
-        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkIgvChart", sparkIgvGlobalChart);
-        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkPorcentajeChart", sparkPorcentajeGlobalChart);
-        getSaludTributaria(data.valorPeriodoAnio, data.valorPeriodoMes, "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
+        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkVentasChart", "Ventas");
+        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkComprasChart", "Compras");
+        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkIgvChart", "Igv");
+        getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkPorcentajeChart", "Porcentaje");
+        getSaludTributaria(data.valorPeriodoAnio, data.valorPeriodoMes, "saludTributariaPeriodo", "saludTributariaChart")
       })
       .catch((err) => console.error("Error al cargar resumen:", err));
   }
@@ -1106,13 +1014,13 @@ document.addEventListener("DOMContentLoaded", function () {
           data.valorAnioUnoAtras,
           "historicoEnSolesPasadoAnio",
           "historicoEnSolesPasadoChart",
-          historicoEnSolesPasadoGlobalChart
+          "Pasado"
         );
         getHistoricoEnSoles(
           data.valorAnio,
           "historicoEnSolesActualAnio",
           "historicoEnSolesActualChart",
-          historicoEnSolesActualGlobalChart
+          "Actual"
         );
         getHistoricoIGV(data.valorAnioUnoAtras, "historicoIGVPasadoAnio", "historicoIGVPasadoTabla");
         getHistoricoIGV(data.valorAnio, "historicoIGVActualAnio", "historicoIGVActualTabla");
@@ -1120,25 +1028,25 @@ document.addEventListener("DOMContentLoaded", function () {
           data.valorAnioUnoAtras,
           "comportamientoIGVPasadoAnio",
           "comportamientoIGVPasadoChart",
-          comportamientoIGVPasadoGlobalChart
+          "Pasado"
         );
         getComportamientoIgv(
           data.valorAnio,
           "comportamientoIGVActualAnio",
           "comportamientoIGVActualChart",
-          comportamientoIGVActualGlobalChart
+          "Actual"
         );
         getVentasVsCompras(
           data.valorAnioUnoAtras,
           "ventasVsComprasPasadoAnio",
           "ventasVsComprasPasadoChart",
-          ventasVsComprasPasadoGlobalChart
+          "Pasado"
         );
         getVentasVsCompras(
           data.valorAnio,
           "ventasVsComprasActualAnio",
           "ventasVsComprasActualChart",
-          ventasVsComprasActualGlobalChart
+          "Actual"
         );
         getHistoricoRenta(data.valorAnioUnoAtras, "historicoRentaPasadoAnio", "historicoRentaPasadoTabla");
         getHistoricoRenta(data.valorAnio, "historicoRentaActualAnio", "historicoRentaActualTabla");
@@ -1151,11 +1059,11 @@ document.addEventListener("DOMContentLoaded", function () {
   let periodo = document.getElementById('periodo').innerHTML;
   let [anioPeriodo, mesPeriodo] = periodo.split('-');
   getValoresKpis(anioPeriodo, mesPeriodo, "ventasMes", "comprasMes", "igvMes", "porcentajeMes");
-  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkVentasChart", sparkVentasGlobalChart);
-  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkComprasChart", sparkComprasGlobalChart);
-  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkIgvChart", sparkIgvGlobalChart);
-  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkPorcentajeChart", sparkPorcentajeGlobalChart);
-  getSaludTributaria(anioPeriodo, mesPeriodo, "saludTributariaPeriodo", "saludTributariaChart", saludTributariaGlobalChart)
+  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkVentasChart", "Ventas");
+  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkComprasChart", "Compras");
+  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkIgvChart", "Igv");
+  getSparklineKpis(anioPeriodo, mesPeriodo, "sparkPorcentajeChart", "Porcentaje");
+  getSaludTributaria(anioPeriodo, mesPeriodo, "saludTributariaPeriodo", "saludTributariaChart")
 
   //Graficos Anuales
   let anio = document.getElementById('anio').innerHTML;
@@ -1164,13 +1072,13 @@ document.addEventListener("DOMContentLoaded", function () {
     anioUnoAtras,
     "historicoEnSolesPasadoAnio",
     "historicoEnSolesPasadoChart",
-    historicoEnSolesPasadoGlobalChart
+    "Pasado"
   );
   getHistoricoEnSoles(
     anio,
     "historicoEnSolesActualAnio",
     "historicoEnSolesActualChart",
-    historicoEnSolesActualGlobalChart
+    "Actual"
   );
   getHistoricoIGV(anioUnoAtras, "historicoIGVPasadoAnio", "historicoIGVPasadoTabla");
   getHistoricoIGV(anio, "historicoIGVActualAnio", "historicoIGVActualTabla");
@@ -1178,25 +1086,25 @@ document.addEventListener("DOMContentLoaded", function () {
     anioUnoAtras,
     "comportamientoIGVPasadoAnio",
     "comportamientoIGVPasadoChart",
-    comportamientoIGVPasadoGlobalChart
+    "Pasado"
   );
   getComportamientoIgv(
     anio,
     "comportamientoIGVActualAnio",
     "comportamientoIGVActualChart",
-    comportamientoIGVActualGlobalChart
+    "Actual"
   );
   getVentasVsCompras(
     anioUnoAtras,
     "ventasVsComprasPasadoAnio",
     "ventasVsComprasPasadoChart",
-    ventasVsComprasPasadoGlobalChart
+    "Pasado"
   );
   getVentasVsCompras(
     anio,
     "ventasVsComprasActualAnio",
     "ventasVsComprasActualChart",
-    ventasVsComprasActualGlobalChart
+    "Actual"
   );
   getHistoricoRenta(anioUnoAtras, "historicoRentaPasadoAnio", "historicoRentaPasadoTabla");
   getHistoricoRenta(anio, "historicoRentaActualAnio", "historicoRentaActualTabla");

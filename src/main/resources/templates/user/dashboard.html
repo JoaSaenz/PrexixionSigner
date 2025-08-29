@@ -14,7 +14,7 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Dashboard</h1>
+                    <h1 class="mt-4">Dashboard Tributario</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
@@ -27,159 +27,141 @@
                     </h6>
 
                     <div class="row">
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card shadow-sm border-0 rounded-lg">
-                                <div class="card-body d-flex flex-column">
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex justify-content-center align-items-center rounded-lg"
-                                            style="min-width:80px; height:60px; background-color: rgb(88, 56, 202); color: #fff; font-size: 1.5rem;">
-                                            <i class="fas fa-chart-line"></i>
-                                        </div>
-                                        <div style="padding-left: 20px;">
-                                            <div class="text-muted small">Ventas del mes</div>
-                                            <div class="h4 mb-0 font-weight-bold" style="color: rgb(88, 56, 202);">
-                                                S/ <span id="ventasMes">0</span>
+                        <!-- Columna izquierda: KPIs -->
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="card shadow-sm border-0 rounded-lg">
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="d-flex align-items-center">
+                                                <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                                    style="min-width:80px; height:60px; background-color: rgb(88, 56, 202); color: #fff; font-size: 1.5rem;">
+                                                    <i class="fas fa-chart-line"></i>
+                                                </div>
+                                                <div style="padding-left: 20px;">
+                                                    <div class="text-muted small">Ventas del mes</div>
+                                                    <div class="h4 mb-0 font-weight-bold"
+                                                        style="color: rgb(88, 56, 202);">
+                                                        S/ <span id="ventasMes">0</span>
+                                                    </div>
+                                                    <div id="trendVentas" class="kpi-tendencia"></div>
+                                                </div>
                                             </div>
-                                            <div id="trendVentas" class="kpi-tendencia"></div>
+                                            <div class="sparkline-container mt-2">
+                                                <canvas id="sparkVentasChart"></canvas>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="sparkline-container mt-2">
-                                        <canvas id="sparkVentasChart"></canvas>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card shadow-sm border-0 rounded-lg">
-                                <div class="card-body d-flex flex-column">
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex justify-content-center align-items-center rounded-lg"
-                                            style="min-width:80px; height:60px; background-color: rgb(0, 168, 150); color: #fff; font-size: 1.5rem;">
-                                            <i class="fas fa-shopping-cart"></i>
-                                        </div>
-                                        <div style="padding-left: 20px;">
-                                            <div class="text-muted small">Compras del mes</div>
-                                            <div class="h4 mb-0 font-weight-bold" style="color: rgb(0, 168, 150);">
-                                                S/ <span id="comprasMes">0</span>
-                                            </div>
-                                            <div id="trendCompras" class="kpi-tendencia"></div>
-                                        </div>
-                                    </div>
-                                    <div class="sparkline-container mt-2">
-                                        <canvas id="sparkComprasChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card shadow-sm border-0 rounded-lg">
-                                <div class="card-body d-flex flex-column">
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex justify-content-center align-items-center rounded-lg"
-                                            style="min-width:80px; height:60px; background-color: rgb(76, 110, 219); color: #fff; font-size: 1.5rem;">
-                                            <i class="fas fa-file-invoice-dollar"></i>
-                                        </div>
-                                        <div style="padding-left: 20px;">
-                                            <div class="text-muted small">IGV del mes</div>
-                                            <div class="h4 mb-0 font-weight-bold" style="color: rgb(76, 110, 219);">
-                                                S/ <span id="igvMes">0</span>
-                                            </div>
-                                            <div id="trendIgv" class="kpi-tendencia"></div>
-                                        </div>
-                                    </div>
-                                    <div class="sparkline-container mt-2">
-                                        <canvas id="sparkIgvChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card shadow-sm border-0 rounded-lg">
-                                <div class="card-body d-flex flex-column">
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex justify-content-center align-items-center rounded-lg"
-                                            style="min-width:80px; height:60px; background-color: rgb(139, 123, 207); color: #fff; font-size: 1.5rem;">
-                                            <i class="fas fa-percentage"></i>
-                                        </div>
-                                        <div style="padding-left: 20px;">
-                                            <div class="text-muted small">%</div>
-                                            <div class="h4 mb-0 font-weight-bold" style="color: rgb(139, 123, 207);">
-                                                <span id="porcentajeMes">0</span> %
-                                            </div>
-                                            <div id="trendPorcentaje" class="kpi-tendencia"></div>
-                                        </div>
-                                    </div>
-                                    <div class="sparkline-container mt-2">
-                                        <canvas id="sparkPorcentajeChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <!-- <div class="px-4 pt-4 pb-1 text-center">
-                                    <h5 class="fw-bold text-dark mb-0">
-                                        Calendar
-                                    </h5>
-                                </div> -->
-                                <div class="card-body ">
+                                <div class="col-md-6 mb-4">
+                                    <div class="card shadow-sm border-0 rounded-lg">
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="d-flex align-items-center">
+                                                <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                                    style="min-width:80px; height:60px; background-color: rgb(0, 168, 150); color: #fff; font-size: 1.5rem;">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </div>
+                                                <div style="padding-left: 20px;">
+                                                    <div class="text-muted small">Compras del mes</div>
+                                                    <div class="h4 mb-0 font-weight-bold"
+                                                        style="color: rgb(0, 168, 150);">
+                                                        S/ <span id="comprasMes">0</span>
+                                                    </div>
+                                                    <div id="trendCompras" class="kpi-tendencia"></div>
+                                                </div>
+                                            </div>
+                                            <div class="sparkline-container mt-2">
+                                                <canvas id="sparkComprasChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <div class="card shadow-sm border-0 rounded-lg">
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="d-flex align-items-center">
+                                                <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                                    style="min-width:80px; height:60px; background-color: rgb(76, 110, 219); color: #fff; font-size: 1.5rem;">
+                                                    <i class="fas fa-file-invoice-dollar"></i>
+                                                </div>
+                                                <div style="padding-left: 20px;">
+                                                    <div class="text-muted small">IGV del mes</div>
+                                                    <div class="h4 mb-0 font-weight-bold"
+                                                        style="color: rgb(76, 110, 219);">
+                                                        S/ <span id="igvMes">0</span>
+                                                    </div>
+                                                    <div id="trendIgv" class="kpi-tendencia"></div>
+                                                </div>
+                                            </div>
+                                            <div class="sparkline-container mt-2">
+                                                <canvas id="sparkIgvChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <div class="card shadow-sm border-0 rounded-lg">
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="d-flex align-items-center">
+                                                <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                                    style="min-width:80px; height:60px; background-color: rgb(139, 123, 207); color: #fff; font-size: 1.5rem;">
+                                                    <i class="fas fa-percentage"></i>
+                                                </div>
+                                                <div style="padding-left: 20px;">
+                                                    <div class="text-muted small">%</div>
+                                                    <div class="h4 mb-0 font-weight-bold"
+                                                        style="color: rgb(139, 123, 207);">
+                                                        <span id="porcentajeMes">0</span> %
+                                                    </div>
+                                                    <div id="trendPorcentaje" class="kpi-tendencia"></div>
+                                                </div>
+                                            </div>
+                                            <div class="sparkline-container mt-2">
+                                                <canvas id="sparkPorcentajeChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="card shadow-sm border-0 rounded-lg h-100">
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="d-flex align-items-center">
+                                                <div class="d-flex justify-content-center align-items-center rounded-lg"
+                                                    style="min-width:80px; height:60px; background-color: rgb(231, 76, 60); color: #fff; font-size: 1.5rem;">
+                                                    <i class="fas fa-heartbeat"></i>
+                                                </div>
+                                                <div style="padding-left: 20px;">
+                                                    <div class="text-muted small">Indicador</div>
+                                                    <div class="h5 mb-0 font-weight-bold"
+                                                        style="color: rgb(231, 76, 60);">
+                                                        Salud Tributaria <span id="saludTributariaPeriodo"
+                                                            class="text-muted fw-normal"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Contenedor del gráfico -->
+                                            <div class="chart-container mt-3 text-center">
+                                                <canvas id="saludTributariaChart" style="max-height:180px;"></canvas>
+                                                <span class="text-center text-danger font-weight-bold d-block mt-2"
+                                                    id="saludTributariaMensaje"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- Fin row KPIs -->
+                        </div>
+
+                        <!-- Columna derecha: Calendario -->
+                        <div class="col-xl-6 col-lg-12 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
                                     <div class="calendar-container">
                                         <div id="calendarObligaciones" class="calendar col-12 obligaciones-calendar">
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-2">
-                            <div class="card mb-4">
-                                <div class="px-4 pt-4 pb-1 text-center">
-                                    <h5 class="fw-bold text-dark mb-0">
-                                        Enlaces de interés
-                                    </h5>
-                                </div>
-                                <div class="card-body enlacesExternos">
-                                    <ul>
-                                        <li><a href="https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias"
-                                                target="_blank">Consulta RUC</a></li>
-                                        <li><a href="https://www2.sunarp.gob.pe/consulta-vehicular/inicio"
-                                                target="_blank">Consulta
-                                                vehicular SUNARP</a></li>
-                                        <li><a href="https://pvo.osinergmin.gob.pe/msfh5/busquedaRegistroHidrocarburos/init.action"
-                                                target="_blank">Consulta OSINERGMIN</a></li>
-                                        <li><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_consultadgtt/Frm_rep_intra_mercancia.aspx"
-                                                target="_blank">MTC consulta transportista</a></li>
-                                        <li><a href="https://pvo.osinergmin.gob.pe/seguridad/login?error=UP"
-                                                target="_blank">Consulta
-                                                SCOP</a></li>
-                                        <li><a href="https://apps.trabajo.gob.pe/consultas-remype/app/index.html"
-                                                target="_blank">Consulta REMYPE</a></li>
-                                        <li><a href="http://www.aduanet.gob.pe/cl-ad-itconsultadwh/ieITS01Alias?accion=consultar&CG_consulta=1"
-                                                target="_blank">Consulta importador/exportador</a></li>
-                                        <li><a href="https://im01-autorizacion-sprl-production.apps.paas.sunarp.gob.pe/v1/sunarp-services/im/autorizacion/login"
-                                                target="_blank">SUNARP trámites</a></li>
-                                        <li><a href="https://gerenciasac.com" target="_blank">Gerencia SAC</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4">
-                            <div class="card mb-4">
-                                <div class="px-4 pt-4 pb-1 text-center">
-                                    <h5 class="fw-bold text-dark mb-0">
-                                        Salud Tributaria <span id="saludTributariaPeriodo"
-                                            class="text-muted fw-normal"></span>
-                                    </h5>
-                                </div>
-                                <div class="card-body ">
-                                    <div class="chart-container">
-                                        <canvas id="saludTributariaChart">
-
-                                        </canvas>
-                                        <span class="text-center text-danger font-weight-bold"
-                                            id="saludTributariaMensaje"></span>
                                     </div>
                                 </div>
                             </div>
@@ -290,7 +272,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-xl-3 col-md-6">
+                        <div class="dashboard-graph-s">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="p-4 text-center">
@@ -307,7 +289,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
+                        <div class="dashboard-graph-s">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="p-4 text-center">
@@ -324,7 +306,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
+                        <div class="dashboard-graph-s">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="p-4 text-center">
@@ -341,7 +323,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
+                        <div class="dashboard-graph-s">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="p-4 text-center">
@@ -409,91 +391,59 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3"></div>
-                        <div class="col-xl-3"></div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-primary text-white mb-4">
-                                <div class="card-body">Primary Card</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-warning text-white mb-4">
-                                <div class="card-body">Warning Card</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-success text-white mb-4">
-                                <div class="card-body">Success Card</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-danger text-white mb-4">
-                                <div class="card-body">Danger Card</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="row">
-                        <div class="col-xl-3">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    Chart Example New 3
-                                </div>
-                                <div class="card-body">
-                                    <div id="myChart3"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    Chart Example New 4
-                                </div>
-                                <div class="card-body">
-                                    <div id="myChart4"></div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    Chart Excample New 5
+                            <!-- <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Salud Tributaria <span id="saludTributariaPeriodo"
+                                            class="text-muted fw-normal"></span>
+                                    </h5>
                                 </div>
-                                <div class="card-body">
-                                    <div id="myChart5"></div>
+                                <div class="card-body ">
+                                    <div class="chart-container">
+                                        <canvas id="saludTributariaChart">
+
+                                        </canvas>
+                                        <span class="text-center text-danger font-weight-bold"
+                                            id="saludTributariaMensaje"></span>
+                                    </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Enlaces Externos
+                        <div class="col-xl-12">
+                            <div class="card mb-4">
+                                <div class="px-4 pt-4 pb-1 text-center">
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        Enlaces de interés
+                                    </h5>
+                                </div>
+                                <div class="card-body enlacesExternos">
+                                    <ul>
+                                        <li><a href="https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias"
+                                                target="_blank">Consulta RUC</a></li>
+                                        <li><a href="https://www2.sunarp.gob.pe/consulta-vehicular/inicio"
+                                                target="_blank">Consulta
+                                                vehicular SUNARP</a></li>
+                                        <li><a href="https://pvo.osinergmin.gob.pe/msfh5/busquedaRegistroHidrocarburos/init.action"
+                                                target="_blank">Consulta OSINERGMIN</a></li>
+                                        <li><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_consultadgtt/Frm_rep_intra_mercancia.aspx"
+                                                target="_blank">MTC consulta transportista</a></li>
+                                        <li><a href="https://pvo.osinergmin.gob.pe/seguridad/login?error=UP"
+                                                target="_blank">Consulta
+                                                SCOP</a></li>
+                                        <li><a href="https://apps.trabajo.gob.pe/consultas-remype/app/index.html"
+                                                target="_blank">Consulta REMYPE</a></li>
+                                        <li><a href="http://www.aduanet.gob.pe/cl-ad-itconsultadwh/ieITS01Alias?accion=consultar&CG_consulta=1"
+                                                target="_blank">Consulta importador/exportador</a></li>
+                                        <li><a href="https://im01-autorizacion-sprl-production.apps.paas.sunarp.gob.pe/v1/sunarp-services/im/autorizacion/login"
+                                                target="_blank">SUNARP trámites</a></li>
+                                        <li><a href="https://gerenciasac.com" target="_blank">Gerencia SAC</a></li>
+                                    </ul>
+                                </div>
                             </div>
-
                         </div>
                     </div>
 
@@ -716,7 +666,7 @@
 
         .fc {
             font-family: 'Inter', sans-serif;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .fc-event {
@@ -741,7 +691,7 @@
         /* Número del día */
         .fc .fc-daygrid-day-number {
             font-weight: 500;
-            font-size: 13px;
+            font-size: 12px;
             color: #555;
         }
 
@@ -774,7 +724,7 @@
 
         .calendar-container {
             max-width: 100%;
-            height: 650px;
+            /* height: 650px; */
             overflow-y: auto;
         }
 

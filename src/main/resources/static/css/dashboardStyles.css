@@ -81,3 +81,36 @@
     font-size: 0.75rem; /* Opcional: tamaño de texto más pequeño en mobile */
   }
 }
+
+
+/* Archivo dashboard.css */
+
+/* Base: ocupa todo el ancho en móviles */
+.dashboard-graph-s {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* A partir de 768px → 2 columnas */
+@media (min-width: 768px) {
+  .dashboard-graph-s {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/* A partir de 1200px → 2 columnas (igual que xl bootstrap, pero lo ajustamos si quieres) */
+@media (min-width: 1200px) {
+  .dashboard-graph-s {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/* A partir de 1700px → 4 columnas */
+@media (min-width: 1700px) {
+  .dashboard-graph-s {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+}

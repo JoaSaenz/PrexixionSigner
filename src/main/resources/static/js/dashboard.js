@@ -373,6 +373,7 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, tipo) {
             barThickness: undefined,
             backgroundColor: "rgb(88, 56, 202)",
             data: dataVentasHS,
+            borderRadius: 15 // bordes redondeados
           },
           {
             label: "VENTAS IGV",
@@ -1122,7 +1123,7 @@ document.addEventListener("DOMContentLoaded", function () {
       initialView: "dayGridMonth",
       editable: false,
       navLinks: true,
-      hiddenDays: [0], // Oculta el día domingo
+      //hiddenDays: [0], // Oculta el día domingo
       events: {
         url: "/api/calendar/getObligaciones",
         method: "GET",

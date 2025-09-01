@@ -114,3 +114,18 @@
     max-width: 25%;
   }
 }
+
+/* Estoy creando uno nuevo para el row de kpis y calendario, lo revisas Joaquin*/
+/* Base: por defecto dos columnas (50%) */
+.col-custom-1700 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+/* A partir de 1700px → una sola columna (100%) */
+@media (min-width: 1700px) {
+  .col-custom-1700 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

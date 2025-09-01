@@ -28,7 +28,7 @@
 
                     <div class="row">
                         <!-- Columna izquierda: KPIs -->
-                        <div class="col-xl-6 col-lg-12">
+                        <div class=".col-custom-1700">
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="card shadow-sm border-0 rounded-lg">
@@ -130,24 +130,16 @@
                                         <div class="card-body d-flex flex-column">
                                             <div class="d-flex align-items-center">
                                                 <div class="d-flex justify-content-center align-items-center rounded-lg"
-                                                    style="min-width:80px; height:60px; background-color: rgb(231, 76, 60); color: #fff; font-size: 1.5rem;">
+                                                    style="min-width:80px; height:60px; background-color: rgb(0, 0, 0); color: #fff; font-size: 1.5rem;">
                                                     <i class="fas fa-heartbeat"></i>
                                                 </div>
                                                 <div style="padding-left: 20px;">
-                                                    <div class="text-muted small">Indicador</div>
-                                                    <div class="h5 mb-0 font-weight-bold"
-                                                        style="color: rgb(231, 76, 60);">
-                                                        Salud Tributaria <span id="saludTributariaPeriodo"
-                                                            class="text-muted fw-normal"></span>
-                                                    </div>
+                                                    <div class="text-muted small">Indicador de Salud del mes</div>
+                                                    <div id="saludTributariaMensaje" class="text-danger kpi-tendencia"></div>
                                                 </div>
                                             </div>
-
-                                            <!-- Contenedor del gráfico -->
-                                            <div class="chart-container mt-3 text-center">
+                                            <div class="mt-2">
                                                 <canvas id="saludTributariaChart" style="max-height:180px;"></canvas>
-                                                <span class="text-center text-danger font-weight-bold d-block mt-2"
-                                                    id="saludTributariaMensaje"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -156,7 +148,7 @@
                         </div>
 
                         <!-- Columna derecha: Calendario -->
-                        <div class="col-xl-6 col-lg-12 mb-4">
+                        <div class=".col-custom-1700 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <div class="calendar-container">
@@ -392,23 +384,6 @@
                             </div>
                         </div>
                         <div class="col-xl-6">
-                            <!-- <div class="card mb-4">
-                                <div class="px-4 pt-4 pb-1 text-center">
-                                    <h5 class="fw-bold text-dark mb-0">
-                                        Salud Tributaria <span id="saludTributariaPeriodo"
-                                            class="text-muted fw-normal"></span>
-                                    </h5>
-                                </div>
-                                <div class="card-body ">
-                                    <div class="chart-container">
-                                        <canvas id="saludTributariaChart">
-
-                                        </canvas>
-                                        <span class="text-center text-danger font-weight-bold"
-                                            id="saludTributariaMensaje"></span>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
 
@@ -440,7 +415,7 @@
                                                 target="_blank">Consulta importador/exportador</a></li>
                                         <li><a href="https://im01-autorizacion-sprl-production.apps.paas.sunarp.gob.pe/v1/sunarp-services/im/autorizacion/login"
                                                 target="_blank">SUNARP trámites</a></li>
-                                        <li><a href="https://gerenciasac.com" target="_blank">Gerencia SAC</a></li>
+                                        <li><a href="https://gerenciasac.com" target="_blank">Gerencia.com</a></li>
                                     </ul>
                                 </div>
                             </div>

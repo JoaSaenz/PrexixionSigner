@@ -202,7 +202,7 @@ function getSparklineKpis(anio, mes, grafico, tipo) {
     .catch((err) => console.error("Error al cargar resumen:", err));
 }
 
-function getSaludTributaria(anio, mes, periodoLabel, grafico) {
+function getSaludTributaria(anio, mes, grafico) {
   fetch(`/api/dashboard/getSaludTributaria?anio=${anio}&mes=${mes}`, {
     method: "GET",
     headers: {
@@ -212,9 +212,9 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico) {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data.statsSaludTributaria);
+      //console.log(data.statsSaludTributaria);
 
-      // ✅ Validar si viene vacío o null
+      // Validar si viene vacío o null
       if (!data || !data.statsSaludTributaria) {
         console.warn("No hay datos para el periodo:", anio, mes);
 
@@ -223,21 +223,21 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico) {
           saludTributariaGlobalChart.destroy();
         }
 
-        // Mensaje en el canvas
+        //Mensaje en el canvas
         let ctx = saludTributariaChart.getContext("2d");
         ctx.clearRect(0, 0, saludTributariaChart.width, saludTributariaChart.height);
         ctx.font = "9px Arial";
-        ctx.textAlign = "center";
+        //ctx.textAlign = "center";
         ctx.fillText("NO HAY DATOS DISPONIBLES.", saludTributariaChart.width / 2, saludTributariaChart.height / 2);
 
-        // limpiar mensaje alerta
+        //limpiar mensaje alerta
         $('#saludTributariaMensaje').text('');
-        document.getElementById("" + periodoLabel).textContent = anio + "-" + mes;
+        //document.getElementById("" + periodoLabel).textContent = anio + "-" + mes;
 
-        return; // 🚪 salir sin intentar graficar
+        return; //salir sin intentar graficar
       }
 
-      // ✅ Continuar si sí hay datos
+      //Continuar si sí hay datos
       let statsSaludTributaria = data.statsSaludTributaria;
       let totalVentasST = statsSaludTributaria.ventas === '0.00' ? 0 : Math.round(statsSaludTributaria.ventas);
       let totalVentasIgvST = statsSaludTributaria.totalVentasIgv === '0.00' ? 0 : Math.round(statsSaludTributaria.totalVentasIgv);
@@ -256,7 +256,7 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico) {
       Chart.plugins.unregister(ChartDataLabels);
 
       let saludTributariaChart = document.getElementById(grafico);
-      document.getElementById("" + periodoLabel).textContent = anio + "-" + mes;
+      //document.getElementById("" + periodoLabel).textContent = anio + "-" + mes;
 
       let saludTributariaData = {
         labels: ['VENTAS', 'COMPRAS'],
@@ -265,9 +265,35 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico) {
             label: 'TOTAL',
             data: [dataTotalVentasMasVentasIgvST, dataTotalComprasMasComprasIgvST],
             backgroundColor: ['rgb(88, 56, 202)', 'rgb(0, 168, 150)'],
-            borderWidth: 1
+            borderWidth: 2
           }
         ]
+      };
+
+      // Plugin para escribir el % en el centro
+      let centerTextPlugin = {
+        beforeDraw: function (chart) {
+          let width = chart.chart.width,
+            height = chart.chart.height,
+            ctx = chart.chart.ctx;
+
+          ctx.restore();
+          let dataset = chart.config.data.datasets[0].data;
+          let total = dataset.reduce((a, b) => a + b, 0);
+          let maxValue = Math.max(...dataset);
+          let porcentaje = total > 0 ? ((maxValue / total) * 100).toFixed(0) + "%" : "0%";
+
+          ctx.font = "28px 'Open Sans', sans-serif";
+          ctx.fillStyle = "#6c757d";
+          ctx.textBaseline = "middle";
+
+          let textX = Math.round(width / 2);
+          let textY = Math.round(height / 2);
+
+          ctx.textAlign = "center";
+          ctx.fillText(porcentaje, textX, textY);
+          ctx.save();
+        }
       };
 
       var allZero = saludTributariaData.datasets[0].data.every(value => value === 0);
@@ -279,22 +305,20 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico) {
         if (allZero) {
           let ctx = saludTributariaChart.getContext("2d");
           ctx.clearRect(0, 0, saludTributariaChart.width, saludTributariaChart.height);
-          ctx.font = '9px Arial';
+          ctx.font = '13px "Open Sans", sans-serif';
+          ctx.fillStyle = "#6c757d";
           ctx.textAlign = 'center';
+          ctx.textBaseline = "middle";
           ctx.fillText('NO HAY DATOS DISPONIBLES.', saludTributariaChart.width / 2, saludTributariaChart.height / 2);
         } else {
           saludTributariaGlobalChart = new Chart(saludTributariaChart, {
             type: 'doughnut',
             data: saludTributariaData,
             options: {
-              responsive: true,
+              cutoutPercentage: 85,
+              responsive: false,
               legend: {
                 display: false,
-                position: "top",
-                labels: {
-                  fontColor: "#333",
-                  fontSize: 12,
-                },
               },
               animation: {
                 animateScale: true,
@@ -308,24 +332,9 @@ function getSaludTributaria(anio, mes, periodoLabel, grafico) {
                     return addCommas(Math.round(value));
                   }
                 }
-              },
-              plugins: {
-                datalabels: {
-                  display: true,
-                  formatter: (value, context) => {
-                    let sum = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                    let percentage = (value * 100 / sum).toFixed(2) + "%";
-                    return percentage;
-                  },
-                  color: '#fff',
-                  font: {
-                    size: 16,
-                    weight: 'bold'
-                  }
-                }
               }
             },
-            plugins: [ChartDataLabels]
+            plugins: [centerTextPlugin]
           });
         }
       }
@@ -991,7 +1000,7 @@ document.addEventListener("DOMContentLoaded", function () {
         getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkComprasChart", "Compras");
         getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkIgvChart", "Igv");
         getSparklineKpis(data.valorPeriodoAnio, data.valorPeriodoMes, "sparkPorcentajeChart", "Porcentaje");
-        getSaludTributaria(data.valorPeriodoAnio, data.valorPeriodoMes, "saludTributariaPeriodo", "saludTributariaChart")
+        getSaludTributaria(data.valorPeriodoAnio, data.valorPeriodoMes, "saludTributariaChart")
       })
       .catch((err) => console.error("Error al cargar resumen:", err));
   }
@@ -1064,7 +1073,7 @@ document.addEventListener("DOMContentLoaded", function () {
   getSparklineKpis(anioPeriodo, mesPeriodo, "sparkComprasChart", "Compras");
   getSparklineKpis(anioPeriodo, mesPeriodo, "sparkIgvChart", "Igv");
   getSparklineKpis(anioPeriodo, mesPeriodo, "sparkPorcentajeChart", "Porcentaje");
-  getSaludTributaria(anioPeriodo, mesPeriodo, "saludTributariaPeriodo", "saludTributariaChart")
+  getSaludTributaria(anioPeriodo, mesPeriodo, "saludTributariaChart")
 
   //Graficos Anuales
   let anio = document.getElementById('anio').innerHTML;
@@ -1123,7 +1132,7 @@ document.addEventListener("DOMContentLoaded", function () {
       initialView: "dayGridMonth",
       editable: false,
       navLinks: true,
-      //hiddenDays: [0], // Oculta el día domingo
+      hiddenDays: [0], // Oculta el día domingo
       events: {
         url: "/api/calendar/getObligaciones",
         method: "GET",

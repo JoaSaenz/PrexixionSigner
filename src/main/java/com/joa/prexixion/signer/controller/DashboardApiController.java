@@ -5,6 +5,8 @@ import com.joa.prexixion.signer.service.StatComportamientoService;
 
 import ch.qos.logback.core.model.Model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardApiController {
+
+    private static final Logger logger = LoggerFactory.getLogger(DashboardApiController.class);
 
     @Autowired
     StatComportamientoService comportamientoService;

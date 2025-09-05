@@ -246,12 +246,18 @@ function getSaludTributaria(anio, mes, grafico) {
 
       let dataTotalVentasMasVentasIgvST = totalVentasST + totalVentasIgvST;
       let dataTotalComprasMasComprasIgvST = totalComprasST + totalComprasIgvST;
+      let total = dataTotalVentasMasVentasIgvST + dataTotalComprasMasComprasIgvST;
+      let porcentajeVentas = total > 0 ? ((dataTotalVentasMasVentasIgvST / total) * 100).toFixed(0) : 0;
+      let porcentajeCompras = total > 0 ? ((dataTotalComprasMasComprasIgvST / total) * 100).toFixed(0) : 0;
 
       if (dataTotalVentasMasVentasIgvST < dataTotalComprasMasComprasIgvST) {
         $('#saludTributariaMensaje').text('Alerta, existen posibles contingencias tributarias.');
       } else {
         $('#saludTributariaMensaje').text('');
       }
+
+      document.getElementById("labelVentasSalud").textContent = porcentajeVentas + "%";
+      document.getElementById("labelComprasSalud").textContent = porcentajeCompras + "%";
 
       Chart.plugins.unregister(ChartDataLabels);
 

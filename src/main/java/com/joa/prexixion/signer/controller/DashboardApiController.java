@@ -20,8 +20,6 @@ import java.util.Map;
 @RequestMapping("/api/dashboard")
 public class DashboardApiController {
 
-    private static final Logger logger = LoggerFactory.getLogger(DashboardApiController.class);
-
     @Autowired
     StatComportamientoService comportamientoService;
 

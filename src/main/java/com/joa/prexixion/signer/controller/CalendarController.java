@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,27 +16,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joa.prexixion.signer.model.CalendarEvent;
+import com.joa.prexixion.signer.repository.StatComportamientoRepository;
 import com.joa.prexixion.signer.security.CustomUserDetails;
 import com.joa.prexixion.signer.service.CalendarService;
+import com.joa.prexixion.signer.utils.LoggerUtils;
 
 @RestController
 @RequestMapping("/api/calendar")
 public class CalendarController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CalendarController.class);
+
     @Autowired
     CalendarService calendarService;
+
+    @Autowired
+    LoggerUtils loggerUtils;
 
     @GetMapping("/getObligaciones")
     public ResponseEntity<List<Map<String, Object>>> getObligaciones() {
         List<Map<String, Object>> list = new ArrayList<>();
         try {
             list = calendarService.getObligaciones();
-
+            return ResponseEntity.ok(list);
         } catch (Exception e) {
-            System.out.println(e);
+            return ResponseEntity.status(500).body(loggerUtils.errorList(e));
         }
-
-        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/getFeriados")
@@ -44,7 +51,7 @@ public class CalendarController {
             list = calendarService.listFeriados();
 
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error(e.toString());
         }
 
         return ResponseEntity.ok(list);
@@ -57,7 +64,7 @@ public class CalendarController {
             list = calendarService.listFeriados();
 
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error(e.toString());
         }
 
         return ResponseEntity.ok(list);

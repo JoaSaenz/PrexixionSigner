@@ -1,6 +1,6 @@
 /* Mobile First */
 body {
-    background: linear-gradient(135deg, #060e57, #9789df);
+    background: linear-gradient(135deg, #060e57, #AFCBFF);
     min-height: 100vh;
     display: flex;
     justify-content: center;

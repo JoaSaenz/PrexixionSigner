@@ -25,8 +25,6 @@ import com.joa.prexixion.signer.utils.LoggerUtils;
 @RequestMapping("/api/calendar")
 public class CalendarController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CalendarController.class);
-
     @Autowired
     CalendarService calendarService;
 
@@ -49,12 +47,10 @@ public class CalendarController {
         List<Map<String, Object>> list = new ArrayList<>();
         try {
             list = calendarService.listFeriados();
-
+            return ResponseEntity.ok(list);
         } catch (Exception e) {
-            logger.error(e.toString());
+            return ResponseEntity.status(500).body(loggerUtils.errorList(e));
         }
-
-        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/getFiscalizaciones")
@@ -62,12 +58,9 @@ public class CalendarController {
         List<Map<String, Object>> list = new ArrayList<>();
         try {
             list = calendarService.listFeriados();
-
+            return ResponseEntity.ok(list);
         } catch (Exception e) {
-            logger.error(e.toString());
+            return ResponseEntity.status(500).body(loggerUtils.errorList(e));
         }
-
-        return ResponseEntity.ok(list);
     }
-
 }

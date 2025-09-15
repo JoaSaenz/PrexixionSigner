@@ -3,6 +3,8 @@ package com.joa.prexixion.signer.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.joa.prexixion.signer.model.CalendarEvent;
@@ -15,6 +17,8 @@ import jakarta.persistence.Tuple;
 
 @Repository
 public class CalendarRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(CalendarRepository.class);
 
     @PersistenceContext
     private EntityManager em;
@@ -41,7 +45,7 @@ public class CalendarRepository {
             }
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println(e);
+            logger.error(e.toString());
         }
 
         return list;
@@ -54,7 +58,7 @@ public class CalendarRepository {
                 + "FROM ( \n"
                 + "    -- cronogramaPDT \n"
                 + "    SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#5838CA' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#090C9B' AS color, 8 AS area \n"
                 + "    FROM cronogramaPDT \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -71,7 +75,7 @@ public class CalendarRepository {
                 + " \n"
                 + "    -- cronogramaSire \n"
                 + "    SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#4C6EDB' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#3066BE' AS color, 8 AS area \n"
                 + "    FROM cronogramaSire \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -102,7 +106,7 @@ public class CalendarRepository {
                 + "            WHEN '11' THEN 'NOV' \n"
                 + "            WHEN '12' THEN 'DIC' \n"
                 + "        END AS titulo, \n"
-                + "        fecha, '#6948B4' AS color, 8 AS area \n"
+                + "        fecha, '#0A2472' AS color, 8 AS area \n"
                 + "    FROM cronogramaPLE_Diario \n"
                 + " \n"
                 + "	UNION ALL \n"
@@ -123,7 +127,7 @@ public class CalendarRepository {
                 + "            WHEN '11' THEN 'NOV' \n"
                 + "            WHEN '12' THEN 'DIC' \n"
                 + "		END AS titulo, \n"
-                + "		fecha, '#419AD6' AS color, 4 AS area \n"
+                + "		fecha, '#1B3B96' AS color, 4 AS area \n"
                 + "    FROM cronogramaAfp \n"
                 + " \n"
                 + "     UNION ALL \n"
@@ -134,7 +138,7 @@ public class CalendarRepository {
                 + "            WHEN '05' THEN 'MAY' \n"
                 + "            WHEN '11' THEN 'NOV' \n"
                 + "		END AS titulo, \n"
-                + "		fecha, '#00A896' AS color, 4 AS area \n"
+                + "		fecha, '#274690' AS color, 4 AS area \n"
                 + "    FROM cronogramaCts \n"
                 + "\n"
                 + "	UNION ALL \n"
@@ -145,7 +149,7 @@ public class CalendarRepository {
                 + "            WHEN '07' THEN 'JUL' \n"
                 + "            WHEN '12' THEN 'DIC' \n"
                 + "		END AS titulo, \n"
-                + "		fecha, '#008C7D' AS color, 4 AS area \n"
+                + "		fecha, '#2C6EBA' AS color, 4 AS area \n"
                 + "    FROM cronogramaGratificacion"
                 + " \n"
                 + "	UNION ALL \n"
@@ -166,13 +170,13 @@ public class CalendarRepository {
                 + "            WHEN '11' THEN 'NOV' \n"
                 + "            WHEN '12' THEN 'DIC' \n"
                 + "		END AS titulo, \n"
-                + "		fecha, '#2D6870' AS color, 8 AS area \n"
+                + "		fecha, '#4682B4' AS color, 8 AS area \n"
                 + "	FROM cronogramaDetracciones \n"
                 + " \n"
                 + "	UNION ALL \n"
                 + " \n"
                 + "	SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#B7ADE2' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#3498DB' AS color, 8 AS area \n"
                 + "    FROM cronogramaAnual \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -191,7 +195,7 @@ public class CalendarRepository {
                 + "	UNION ALL \n"
                 + " \n"
                 + "	SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#8B7BCF' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#7BAAF7' AS color, 8 AS area \n"
                 + "    FROM cronogramaReporteLocal \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -207,7 +211,7 @@ public class CalendarRepository {
                 + "    UNION ALL \n"
                 + " \n"
                 + "    SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#5D5AAC' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#3D73B9' AS color, 8 AS area \n"
                 + "    FROM cronogramaDaot \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -222,7 +226,7 @@ public class CalendarRepository {
                 + "    UNION ALL \n"
                 + " \n"
                 + "    SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#91E0D6' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#4F6D8C' AS color, 8 AS area \n"
                 + "    FROM cronogramaDonaciones \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -237,7 +241,7 @@ public class CalendarRepository {
                 + "    UNION ALL \n"
                 + " \n"
                 + "    SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#6EC2B9' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#5C6F82' AS color, 8 AS area \n"
                 + "    FROM cronogramaRfEcr \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -252,7 +256,7 @@ public class CalendarRepository {
                 + "    UNION ALL \n"
                 + " \n"
                 + "    SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#4BA49D' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#7A8A99' AS color, 8 AS area \n"
                 + "    FROM cronogramaPDT \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -268,7 +272,7 @@ public class CalendarRepository {
                 + "    UNION ALL \n"
                 + " \n"
                 + "    SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#6643A4' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#3B3F4E' AS color, 8 AS area \n"
                 + "    FROM cronogramaPDT \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -284,7 +288,7 @@ public class CalendarRepository {
                 + "    UNION ALL \n"
                 + " \n"
                 + "    SELECT \n"
-                + "        titulos.titulo, titulos.fecha, '#3A51A0' AS color, 8 AS area \n"
+                + "        titulos.titulo, titulos.fecha, '#1E2D3A' AS color, 8 AS area \n"
                 + "    FROM cronogramaPDT \n"
                 + "    CROSS APPLY ( \n"
                 + "        VALUES \n"
@@ -307,7 +311,7 @@ public class CalendarRepository {
                 + "            WHEN '09' THEN 'SEP' \n"
                 + "            WHEN '12' THEN 'DIC' \n"
                 + "		END AS titulo, \n"
-                + "		fecha, '#46BEAA' AS color, 8 AS area \n"
+                + "		fecha, '#4A5D73' AS color, 8 AS area \n"
                 + "	FROM cronogramaDevolucionesISC \n"
                 + " \n"
                 + "     UNION ALL \n"
@@ -320,7 +324,7 @@ public class CalendarRepository {
                 + "            WHEN '07' THEN 'JUL' \n"
                 + "            WHEN '10' THEN 'OCT' \n"
                 + "		END AS titulo, \n"
-                + "		fecha, '#298991' AS color, 8 AS area \n"
+                + "		fecha, '#607D8B' AS color, 8 AS area \n"
                 + "	FROM cronogramaDevolucionesLiberacionDEO \n"
                 + " \n"
                 + ") AS calendario \n"
@@ -343,7 +347,7 @@ public class CalendarRepository {
 
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println(e);
+            logger.error(e.toString());
         }
 
         return list;

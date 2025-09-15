@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,26 +17,32 @@ import com.joa.prexixion.signer.repository.CalendarRepository;
 @Service
 public class CalendarService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CalendarService.class);
+
     @Autowired
     CalendarRepository calendarRepository;
 
     public List<Map<String, Object>> listFeriados() throws Exception {
         List<Map<String, Object>> response = new ArrayList<>();
 
-        List<CalendarEvent> list = calendarRepository.listFeriados();
+        try {
+            List<CalendarEvent> list = calendarRepository.listFeriados();
 
-        for (CalendarEvent obj : list) {
-            Map<String, Object> event = new HashMap<>();
-            event.put("title", obj.getTitle());
-            event.put("start", obj.getStart());
-            event.put("allDay", true);
-            event.put("type", "feriados"); // Tipo
+            for (CalendarEvent obj : list) {
+                Map<String, Object> event = new HashMap<>();
+                event.put("title", obj.getTitle());
+                event.put("start", obj.getStart());
+                event.put("allDay", true);
+                event.put("type", "feriados"); // Tipo
 
-            Map<String, Object> extendedProps = new HashMap<>();
-            extendedProps.put("colorFeriado", "#E6E3F3");
-            event.put("extendedProps", extendedProps);
- 
-            response.add(event);
+                Map<String, Object> extendedProps = new HashMap<>();
+                extendedProps.put("colorFeriado", "#BACCEB");
+                event.put("extendedProps", extendedProps);
+
+                response.add(event);
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
         }
 
         return response;
@@ -43,19 +51,23 @@ public class CalendarService {
     public List<Map<String, Object>> getObligaciones() throws Exception {
         List<Map<String, Object>> response = new ArrayList<>();
 
-        List<CalendarEvent> list = calendarRepository.getObligaciones();
+        try {
+            List<CalendarEvent> list = calendarRepository.getObligaciones();
 
-        List<Map<String, Object>> events = new ArrayList<>();
-        for (CalendarEvent obj : list) {
-            Map<String, Object> event = new HashMap<>();
-            event.put("title", obj.getTitle());
-            event.put("start", obj.getStart());
-            event.put("backgroundColor", obj.getColor());
-            event.put("borderColor", obj.getColor());
-            event.put("allDay", true);
-            events.add(event);
+            List<Map<String, Object>> events = new ArrayList<>();
+            for (CalendarEvent obj : list) {
+                Map<String, Object> event = new HashMap<>();
+                event.put("title", obj.getTitle());
+                event.put("start", obj.getStart());
+                event.put("backgroundColor", obj.getColor());
+                event.put("borderColor", obj.getColor());
+                event.put("allDay", true);
+                events.add(event);
 
-            response.add(event);
+                response.add(event);
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
         }
 
         return response;

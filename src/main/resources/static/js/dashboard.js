@@ -84,8 +84,8 @@ function getSparklineKpis(anio, mes, grafico, tipo) {
 
       switch (grafico) {
         case 'sparkVentasChart':
-          colorData = 'rgb(88, 56, 202)';
-          backgroundColorData = 'rgba(88, 56, 202, 0.2)';
+          colorData = 'rgb(9, 12, 155)';
+          backgroundColorData = 'rgba(9, 12, 155, 0.2)';
           chartData = dataVentasSK;
           formatoTooltip = (num) => `S/. ${num.toLocaleString('es-PE', {
             minimumFractionDigits: 0,
@@ -93,8 +93,8 @@ function getSparklineKpis(anio, mes, grafico, tipo) {
           })}`;
           break;
         case 'sparkComprasChart':
-          colorData = 'rgb(0, 168, 150)';
-          backgroundColorData = 'rgba(0, 168, 150, 0.2)';
+          colorData = 'rgb(48, 102, 190)';
+          backgroundColorData = 'rgba(48, 102, 190, 0.2)';
           chartData = dataComprasSK;
           formatoTooltip = (num) => `S/. ${num.toLocaleString('es-PE', {
             minimumFractionDigits: 0,
@@ -102,8 +102,8 @@ function getSparklineKpis(anio, mes, grafico, tipo) {
           })}`;
           break;
         case 'sparkIgvChart':
-          colorData = 'rgb(76, 110, 219)';
-          backgroundColorData = 'rgba(76, 110, 219, 0.2)';
+          colorData = 'rgb(0, 82, 204)';
+          backgroundColorData = 'rgba(0, 82, 204, 0.2)';
           chartData = dataIgvSK;
           formatoTooltip = (num) => `S/. ${num.toLocaleString('es-PE', {
             minimumFractionDigits: 0,
@@ -111,8 +111,8 @@ function getSparklineKpis(anio, mes, grafico, tipo) {
           })}`;
           break;
         case 'sparkPorcentajeChart':
-          colorData = 'rgb(139, 123, 207)';
-          backgroundColorData = 'rgba(139, 123, 207, 0.2)';
+          colorData = 'rgb(52, 152, 219)';
+          backgroundColorData = 'rgba(52, 152, 219, 0.2)';
           chartData = dataPorcentajeSK;
           formatoTooltip = (num) => `${Math.round(num)} %`;
           break;
@@ -270,7 +270,7 @@ function getSaludTributaria(anio, mes, grafico) {
           {
             label: 'TOTAL',
             data: [dataTotalVentasMasVentasIgvST, dataTotalComprasMasComprasIgvST],
-            backgroundColor: ['rgb(88, 56, 202)', 'rgb(0, 168, 150)'],
+            backgroundColor: ['rgb(9, 12, 155)', 'rgb(48, 102, 190)'],
             borderWidth: 2
           }
         ]
@@ -386,7 +386,7 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, tipo) {
             barPercentage: 0.8,
             categoryPercentage: 0.7,
             barThickness: undefined,
-            backgroundColor: "rgb(88, 56, 202)",
+            backgroundColor: "rgb(9, 12, 155)",
             data: dataVentasHS,
             borderRadius: 15 // bordes redondeados
           },
@@ -395,7 +395,7 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, tipo) {
             barPercentage: 0.8,
             categoryPercentage: 0.7,
             barThickness: undefined,
-            backgroundColor: "rgb(183, 173, 226)",
+            backgroundColor: "rgb(134, 155, 219)",
             data: dataTotalVentasIgvHS,
           },
           {
@@ -403,7 +403,7 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, tipo) {
             barPercentage: 0.8,
             categoryPercentage: 0.7,
             barThickness: undefined,
-            backgroundColor: "rgb(0, 168, 150)",
+            backgroundColor: "rgb(48, 102, 190)",
             data: dataComprasHS,
           },
           {
@@ -411,7 +411,7 @@ function getHistoricoEnSoles(anio, anioLabel, grafico, tipo) {
             barPercentage: 0.8,
             categoryPercentage: 0.7,
             barThickness: undefined,
-            backgroundColor: "rgb(145, 224, 214)",
+            backgroundColor: "rgb(175, 203, 255)",
             data: dataTotalComprasIgvHS,
           },
         ],
@@ -680,7 +680,7 @@ function getComportamientoIgv(anio, anioLabel, grafico, tipo) {
 
       let comportamientoIGVChart = document.getElementById(grafico);
       let barColorsComportamientoIGV = dataIgv.map((value) =>
-        value >= 0 ? "rgb(0, 168, 150)" : "rgb(255, 87, 94)"
+        value >= 0 ? "rgb(0, 82, 204)" : "rgb(255, 87, 94)"
       );
 
       let comportamientoIGVData = {
@@ -804,8 +804,8 @@ function getVentasVsCompras(anio, anioLabel, grafico, tipo) {
             type: "line",
             fill: false,
             pointRadius: 5,
-            borderColor: "rgb(183, 173, 226)",
-            pointBackgroundColor: "rgb(88, 56, 202)",
+            borderColor: "rgb(134, 155, 219)",
+            pointBackgroundColor: "rgb(9, 12, 155)",
           },
           {
             label: "COMPRAS",
@@ -813,8 +813,8 @@ function getVentasVsCompras(anio, anioLabel, grafico, tipo) {
             type: "line",
             fill: false,
             pointRadius: 5,
-            borderColor: "rgb(145, 224, 214)",
-            pointBackgroundColor: "rgb(0, 168, 150)",
+            borderColor: "rgb(175, 203, 255)",
+            pointBackgroundColor: "rgb(48, 102, 190)",
           },
         ],
       };
